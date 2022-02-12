@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -46,6 +47,29 @@ public class Movement : MonoBehaviour
 
     public void SetSpeed(float speed){
         agent.speed = speed;
+    }
+
+    public Vector3 GetVelocity()
+    {
+        /*
+        var vec = this.transform.position -  agent.nextPosition;
+        Debug.Log(vec);     
+        return vec;
+        */
+
+        Vector3 normalizedMovement = agent.desiredVelocity.normalized;
+
+        Vector3 forwardVector = Vector3.Project(normalizedMovement, transform.forward);
+
+        Vector3 rightVector = Vector3.Project(normalizedMovement, transform.right);
+
+        // Dot(direction1, direction2) = 1 if they are in the same direction, -1 if they are opposite
+
+        float forwardVelocity = forwardVector.magnitude * Vector3.Dot(forwardVector, transform.forward);
+
+        float rightVelocity = rightVector.magnitude * Vector3.Dot(rightVector, transform.right);
+
+        return new Vector3(rightVelocity * MoveSpeed, 0, forwardVelocity * MoveSpeed);
     }
 
     #endregion

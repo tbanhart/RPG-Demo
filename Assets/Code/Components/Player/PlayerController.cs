@@ -8,7 +8,9 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] GameObject GUIContainer;
 
-        Movement movement {get => this.GetComponent<Movement>();}
+        Movement movement;
+
+        PlayerAnimator animator;
 
         #endregion
 
@@ -30,6 +32,8 @@ public class PlayerController : MonoBehaviour {
 
         private void Awake() {
                 CurrentState = State.DEFAULT;
+                movement = GetComponent<Movement>();
+                animator = GetComponent<PlayerAnimator>();
         }
 
         private void Update() {
@@ -49,9 +53,17 @@ public class PlayerController : MonoBehaviour {
 
                 // State Machine
                 switch(CurrentState){
+                        
+                        // For if movement was the last thing designated
                         case State.MOVING:
-                                if(movement.IsMoving == false)
+                                // If the move is complete or canceled, back we go to idle
+                                if(movement.IsMoving == false){
                                         SetState(State.IDLE);
+                                        animator.SetMovement(Vector3.zero);
+                                } else{
+                                        animator.SetMovement(movement.GetVelocity());
+                                }
+                                
                                 break;
                 }
         }
@@ -70,7 +82,7 @@ public class PlayerController : MonoBehaviour {
                         Debug.Log(HoveredObject.name);
                         guiman.OpenContextMenu(CursorPosition, HoveredObject);
                 }
-                
+
                 // Start moving to the selected point
                 movement.SetDestination(SelectorPosition);      
                 SetState(State.MOVING);
