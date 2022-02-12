@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 
@@ -40,6 +41,7 @@ public class PlayerController : MonoBehaviour {
                 // Get the raycast for selection purposes
                 var ray = currentcam.ScreenPointToRay(CursorPosition);
                 RaycastHit hit;
+                if(!EventSystem.current.IsPointerOverGameObject())
                 if(Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 6 | 1 << 9))){
                         // Probably want to put something about layer masks in here
                         if(hit.collider == null){
@@ -49,7 +51,8 @@ public class PlayerController : MonoBehaviour {
                                 HoveredObject = hit.collider.gameObject;
                         }
                 }
-                Debug.DrawRay(ray.origin, ray.direction * 100, Color.red);
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 5)))
+                Debug.Log("Button clicked");
 
                 // State Machine
                 switch(CurrentState){
@@ -73,6 +76,9 @@ public class PlayerController : MonoBehaviour {
         #region Input Handlers
 
         public void HandleSelect(){
+                if(EventSystem.current.IsPointerOverGameObject())
+                        return;
+
                 // If a gui option isn't being selected, close the manager window
                 var guiman = GUIContainer.GetComponent<GUIManager>();
                 guiman.CloseContextMenu();
@@ -82,10 +88,12 @@ public class PlayerController : MonoBehaviour {
                         Debug.Log(HoveredObject.name);
                         guiman.OpenContextMenu(CursorPosition, HoveredObject);
                 }
-
-                // Start moving to the selected point
-                movement.SetDestination(SelectorPosition);      
-                SetState(State.MOVING);
+                // Other wise move to the selected point
+                else{
+                        // Start moving to the selected point
+                        movement.SetDestination(SelectorPosition);      
+                        SetState(State.MOVING);
+                }
         }
 
         #endregion
