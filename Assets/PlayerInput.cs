@@ -33,6 +33,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Vector2"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""ContextMenu"",
+                    ""type"": ""Button"",
+                    ""id"": ""cd20822c-f97a-4096-9c4d-b83e1c3db273"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -55,6 +63,17 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""CursorPosition"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6a165aef-5b67-429f-9d56-5bcc602bc4cd"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ContextMenu"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -634,6 +653,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
         m_Player_CursorPosition = m_Player.FindAction("CursorPosition", throwIfNotFound: true);
+        m_Player_ContextMenu = m_Player.FindAction("ContextMenu", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -697,12 +717,14 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Select;
     private readonly InputAction m_Player_CursorPosition;
+    private readonly InputAction m_Player_ContextMenu;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
         public PlayerActions(@PlayerInput wrapper) { m_Wrapper = wrapper; }
         public InputAction @Select => m_Wrapper.m_Player_Select;
         public InputAction @CursorPosition => m_Wrapper.m_Player_CursorPosition;
+        public InputAction @ContextMenu => m_Wrapper.m_Player_ContextMenu;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -718,6 +740,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @CursorPosition.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCursorPosition;
                 @CursorPosition.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCursorPosition;
                 @CursorPosition.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnCursorPosition;
+                @ContextMenu.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnContextMenu;
+                @ContextMenu.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnContextMenu;
+                @ContextMenu.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnContextMenu;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -728,6 +753,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @CursorPosition.started += instance.OnCursorPosition;
                 @CursorPosition.performed += instance.OnCursorPosition;
                 @CursorPosition.canceled += instance.OnCursorPosition;
+                @ContextMenu.started += instance.OnContextMenu;
+                @ContextMenu.performed += instance.OnContextMenu;
+                @ContextMenu.canceled += instance.OnContextMenu;
             }
         }
     }
@@ -886,6 +914,7 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     {
         void OnSelect(InputAction.CallbackContext context);
         void OnCursorPosition(InputAction.CallbackContext context);
+        void OnContextMenu(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

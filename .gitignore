@@ -700,3 +700,145 @@ Temp/UnityTempFile-408f31c47a265fd45b5b319190021fe3
 Temp/UnityTempFile-92442fe1fbf0ed942a3eb4fb68cb381c
 Temp/UnityTempFile-c26273d2edb35c547b00ba3d0e224f56
 Temp/UnityTempFile-c07002191043ea84aa9654e7b4ba7553
+Build/RPG Demo.exe
+Build/UnityCrashHandler32.exe
+Build/UnityPlayer.dll
+Build/MonoBleedingEdge/EmbedRuntime/mono-2.0-bdwgc.dll
+Build/MonoBleedingEdge/EmbedRuntime/MonoPosixHelper.dll
+Build/MonoBleedingEdge/etc/mono/browscap.ini
+Build/MonoBleedingEdge/etc/mono/config
+Build/MonoBleedingEdge/etc/mono/2.0/DefaultWsdlHelpGenerator.aspx
+Build/MonoBleedingEdge/etc/mono/2.0/settings.map
+Build/MonoBleedingEdge/etc/mono/2.0/Browsers/Compat.browser
+Build/MonoBleedingEdge/etc/mono/4.0/DefaultWsdlHelpGenerator.aspx
+Build/MonoBleedingEdge/etc/mono/4.0/settings.map
+Build/MonoBleedingEdge/etc/mono/4.0/Browsers/Compat.browser
+Build/MonoBleedingEdge/etc/mono/4.5/DefaultWsdlHelpGenerator.aspx
+Build/MonoBleedingEdge/etc/mono/4.5/settings.map
+Build/MonoBleedingEdge/etc/mono/4.5/Browsers/Compat.browser
+Build/MonoBleedingEdge/etc/mono/mconfig/config.xml
+Build/RPG Demo_Data/app.info
+Build/RPG Demo_Data/globalgamemanagers
+Build/RPG Demo_Data/globalgamemanagers.assets
+Build/RPG Demo_Data/level0
+Build/RPG Demo_Data/level0.resS
+Build/RPG Demo_Data/RuntimeInitializeOnLoads.json
+Build/RPG Demo_Data/ScriptingAssemblies.json
+Build/RPG Demo_Data/sharedassets0.assets
+Build/RPG Demo_Data/sharedassets0.assets.resS
+Build/RPG Demo_Data/Managed/Assembly-CSharp.dll
+Build/RPG Demo_Data/Managed/Mono.Security.dll
+Build/RPG Demo_Data/Managed/mscorlib.dll
+Build/RPG Demo_Data/Managed/netstandard.dll
+Build/RPG Demo_Data/Managed/System.ComponentModel.Composition.dll
+Build/RPG Demo_Data/Managed/System.Configuration.dll
+Build/RPG Demo_Data/Managed/System.Core.dll
+Build/RPG Demo_Data/Managed/System.Data.dll
+Build/RPG Demo_Data/Managed/System.Diagnostics.StackTrace.dll
+Build/RPG Demo_Data/Managed/System.dll
+Build/RPG Demo_Data/Managed/System.Drawing.dll
+Build/RPG Demo_Data/Managed/System.EnterpriseServices.dll
+Build/RPG Demo_Data/Managed/System.Globalization.Extensions.dll
+Build/RPG Demo_Data/Managed/System.IO.Compression.dll
+Build/RPG Demo_Data/Managed/System.IO.Compression.FileSystem.dll
+Build/RPG Demo_Data/Managed/System.Net.Http.dll
+Build/RPG Demo_Data/Managed/System.Numerics.dll
+Build/RPG Demo_Data/Managed/System.Runtime.dll
+Build/RPG Demo_Data/Managed/System.Runtime.Serialization.dll
+Build/RPG Demo_Data/Managed/System.Runtime.Serialization.Xml.dll
+Build/RPG Demo_Data/Managed/System.ServiceModel.Internals.dll
+Build/RPG Demo_Data/Managed/System.Transactions.dll
+Build/RPG Demo_Data/Managed/System.Xml.dll
+Build/RPG Demo_Data/Managed/System.Xml.Linq.dll
+Build/RPG Demo_Data/Managed/System.Xml.XPath.XDocument.dll
+Build/RPG Demo_Data/Managed/Unity.Animation.Rigging.dll
+Build/RPG Demo_Data/Managed/Unity.Burst.dll
+Build/RPG Demo_Data/Managed/Unity.Burst.Unsafe.dll
+Build/RPG Demo_Data/Managed/Unity.InputSystem.dll
+Build/RPG Demo_Data/Managed/Unity.Mathematics.dll
+Build/RPG Demo_Data/Managed/Unity.TextMeshPro.dll
+Build/RPG Demo_Data/Managed/Unity.Timeline.dll
+Build/RPG Demo_Data/Managed/UnityEngine.AccessibilityModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.AIModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.AndroidJNIModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.AnimationModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ARModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.AssetBundleModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.AudioModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ClothModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ClusterInputModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ClusterRendererModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.CoreModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.CrashReportingModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.DirectorModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.dll
+Build/RPG Demo_Data/Managed/UnityEngine.DSPGraphModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.GameCenterModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.GIModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.GridModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.HotReloadModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ImageConversionModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.IMGUIModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.InputLegacyModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.InputModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.JSONSerializeModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.LocalizationModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ParticleSystemModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.PerformanceReportingModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.Physics2DModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.PhysicsModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ProfilerModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.RuntimeInitializeOnLoadManagerInitializerModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.ScreenCaptureModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.SharedInternalsModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.SpriteMaskModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.SpriteShapeModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.StreamingModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.SubstanceModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.SubsystemsModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.TerrainModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.TerrainPhysicsModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.TextCoreModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.TextRenderingModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.TilemapModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.TLSModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UI.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UIElementsModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UIElementsNativeModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UIModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UmbraModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UNETModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityAnalyticsModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityConnectModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityCurlModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityTestProtocolModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityWebRequestAssetBundleModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityWebRequestAudioModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityWebRequestModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityWebRequestTextureModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.UnityWebRequestWWWModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.VehiclesModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.VFXModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.VideoModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.VirtualTexturingModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.VRModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.WindModule.dll
+Build/RPG Demo_Data/Managed/UnityEngine.XRModule.dll
+Build/RPG Demo_Data/Resources/unity default resources
+Build/RPG Demo_Data/Resources/unity_builtin_extra
+ProjectSettings/BurstAotSettings_StandaloneWindows.json
+Temp/tempFile.res
+Temp/tempFile.resG
+Temp/UnityTempFile-2baf3dd42a89c7541bde70e57eac9a26
+Temp/UnityTempFile-5db9ceef0ba172e4aa6cb1fa31a255ed
+Temp/UnityTempFile-8f251d8b3580a154295a14ff06539f80
+Temp/UnityTempFile-38c0e99369942d243a03645d30e2578e
+Temp/UnityTempFile-975a8824f4da01c4ab834b78e1b0ea15
+Temp/UnityTempFile-31345baf6146e42458aa466371738667
+Temp/UnityTempFile-a4e5a105094b8b34a8ec30aa7ed520f1
+Temp/UnityTempFile-b030fd27c4b0048439b8e2f9fa30a01d
+Temp/UnityTempFile-c9bab228080d13b43bba1026ad224e2a
+Temp/UnityTempFile-da2d2c94dba19c94e9ce6db4b43b95fe
+Temp/UnityTempFile-e5fc2520bd2d08948b73ea72b5936693
+Temp/UnityTempFile-f8b15535536d4974eb08532d31704675
+Temp/UnityTempFile-ffe7cfdaf2190c642bd366c627567097

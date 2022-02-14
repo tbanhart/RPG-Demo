@@ -7,7 +7,7 @@ public class Combat : MonoBehaviour
     [SerializeField] public float Range;
     [SerializeField] float Cooldown;
 
-    RPGStat Life = new RPGStat(20f);
+    RPGStat Life = new RPGStat(10f);
     RPGStat Stamina = new RPGStat(10f);
     RPGStat WeaponDamage = new RPGStat(5f);
     RPGStat AttackSpeed = new RPGStat(1f);

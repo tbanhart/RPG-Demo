@@ -17,6 +17,7 @@ public class InputHandler : MonoBehaviour
 
     PlayerInput inputActions;
     InputAction select;
+    InputAction contextMenu;
     InputAction cursorPosition;
 
     #endregion
@@ -33,14 +34,21 @@ public class InputHandler : MonoBehaviour
     }
 
     private void OnEnable() {
-        //Select
+        // Select
         select = inputActions.Player.Select;
         select.Enable();
 
         inputActions.Player.Select.performed += GetSelection;
         inputActions.Player.Select.Enable();
 
-        //CursorPosition
+        // ContextMenu
+        contextMenu = inputActions.Player.ContextMenu;
+        contextMenu.Enable();
+
+        inputActions.Player.ContextMenu.performed += OpenContextMenu;
+        inputActions.Player.ContextMenu.Enable();
+
+        // CursorPosition
         cursorPosition = inputActions.Player.CursorPosition;
         cursorPosition.Enable();
     }
@@ -56,6 +64,10 @@ public class InputHandler : MonoBehaviour
 
     void GetSelection(InputAction.CallbackContext obj){
         controller.HandleSelect();
+    }
+
+    void OpenContextMenu(InputAction.CallbackContext obj){
+        controller.HandleOpenContext();
     }
 
     #endregion

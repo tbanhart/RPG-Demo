@@ -144,14 +144,6 @@ public class PlayerController : MonoBehaviour {
                 var guiman = GUIContainer.GetComponent<GUIManager>();
                 guiman.CloseContextMenu();
 
-                /* *** This to be moved to context menu input later ***
-                // If an interactable is being selected, open the context menu
-                if(HoveredObject.GetComponent<Interactable>() != null){
-                        Debug.Log(HoveredObject.name);
-                        guiman.OpenContextMenu(CursorPosition, HoveredObject);
-                }
-                */
-
                 // If an interactable is at the cursor, do its default interaction
                 if(HoveredObject.GetComponent<Interactable>() != null){
                         var action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
@@ -165,6 +157,22 @@ public class PlayerController : MonoBehaviour {
                         // Start moving to the selected point
                         SetState(State.MOVING);
                         CurrentInteraction = null;
+                }
+        }
+
+        public void HandleOpenContext(){
+                if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
+                // If a gui option isn't being selected, close the manager window
+                var guiman = GUIContainer.GetComponent<GUIManager>();
+                guiman.CloseContextMenu();
+
+                // If an interactable is being selected, open the context menu
+                if (HoveredObject.GetComponent<Interactable>() != null)
+                {
+                        Debug.Log(HoveredObject.name);
+                        guiman.OpenContextMenu(CursorPosition, HoveredObject);
                 }
         }
 
