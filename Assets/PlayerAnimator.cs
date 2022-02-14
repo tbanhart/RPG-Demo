@@ -13,6 +13,7 @@ public class PlayerAnimator : MonoBehaviour
 
     public void SetMovement(Vector3 velocity)
     {
+        ClearFlags();
         if(velocity.x + velocity.z != 0){
             animator.SetBool("IsMoving", true);
             animator.SetFloat("XVelocity", velocity.x);
@@ -23,5 +24,17 @@ public class PlayerAnimator : MonoBehaviour
             animator.SetFloat("XVelocity", velocity.x);
             animator.SetFloat("YVelocity", velocity.z);
         }
+    }
+
+    public void SetAttacking(bool isAttacking){
+        SetMovement(Vector3.zero);
+
+        //animator.SetBool("IsMoving", false);
+        animator.SetBool("IsAttacking", isAttacking);
+    }
+
+    public void ClearFlags(){
+        animator.SetBool("IsAttacking", false);
+        animator.SetBool("IsMoving", false);
     }
 }

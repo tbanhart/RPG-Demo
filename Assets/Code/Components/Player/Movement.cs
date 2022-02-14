@@ -72,6 +72,24 @@ public class Movement : MonoBehaviour
         return new Vector3(rightVelocity * MoveSpeed, 0, forwardVelocity * MoveSpeed);
     }
 
+    internal void SetStoppingDistance(float distance)
+    {
+        agent.stoppingDistance = distance;
+    }
+
+    public float GetDistance(Vector3 position){
+        NavMeshPath path = new NavMeshPath();
+        agent.CalculatePath(position, path);
+        var corners = path.corners;
+        float distance = 0f;
+
+        for(var corner = 0; corner < corners.Length - 1; corner++){
+            distance += Vector3.Distance(corners[corner], corners[corner+1]);
+        }
+        
+        return distance;
+    }
+
     #endregion
 
 

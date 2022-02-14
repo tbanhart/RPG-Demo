@@ -1,1 +1,12 @@
-public enum State{DEFAULT, IDLE, MOVING}
+public enum State{
+    // Fallthrough case for if something goes wrong
+    DEFAULT, 
+    // No interaction or desination assigned
+    IDLE, 
+    // Going to a destination with no interaction specified
+    MOVING, 
+    // Processing an attack
+    ATTACKING,
+    // Going to an interaction destination
+    TRAVELLING
+    }

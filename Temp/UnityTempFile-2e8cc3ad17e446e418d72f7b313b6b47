@@ -10,7 +10,13 @@
 /preferreduilang:en-US
 /langversion:8.0
 /reference:Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll
+/reference:Library/ScriptAssemblies/Unity.Animation.Rigging.Editor.dll
+/reference:Library/ScriptAssemblies/Unity.Animation.Rigging.dll
+/reference:Library/ScriptAssemblies/Unity.Burst.Editor.dll
+/reference:Library/ScriptAssemblies/Unity.Burst.dll
 /reference:Library/ScriptAssemblies/Unity.InputSystem.dll
+/reference:Library/ScriptAssemblies/Unity.Mathematics.Editor.dll
+/reference:Library/ScriptAssemblies/Unity.Mathematics.dll
 /reference:Library/ScriptAssemblies/Unity.Rider.Editor.dll
 /reference:Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll
 /reference:Library/ScriptAssemblies/Unity.TextMeshPro.dll
@@ -20,6 +26,7 @@
 /reference:Library/ScriptAssemblies/Unity.VisualStudio.Editor.dll
 /reference:Library/ScriptAssemblies/UnityEditor.UI.dll
 /reference:Library/ScriptAssemblies/UnityEngine.UI.dll
+/reference:"X:/Unity Projects/RPG Demo/Library/PackageCache/com.unity.burst@1.3.4/Unity.Burst.Unsafe.dll"
 /reference:"X:/Unity Installs/2020.3.6f1/Editor/Data/Managed/UnityEngine/UnityEditor.CoreModule.dll"
 /reference:"X:/Unity Installs/2020.3.6f1/Editor/Data/Managed/UnityEngine/UnityEditor.GraphViewModule.dll"
 /reference:"X:/Unity Installs/2020.3.6f1/Editor/Data/Managed/UnityEngine/UnityEditor.PackageManagerUIModule.dll"
@@ -312,6 +319,7 @@
 /define:UNITY_STANDALONE_WIN
 /define:UNITY_TEAM_LICENSE
 /define:USE_SEARCH_ENGINE_API
+Assets\AttackType.cs
 Assets\ButtonClick.cs
 Assets\ButtonText.cs
 Assets\Code\Behaviour\States.cs
@@ -324,6 +332,8 @@ Assets\Code\GUI\ContextMenu.cs
 Assets\Code\Interactions\ActionType.cs
 Assets\Code\Interactions\AddInteraction.cs
 Assets\Code\Interactions\Interaction.cs
+Assets\Combat.cs
 Assets\GUI\UIWindow.cs
 Assets\PlayerAnimator.cs
 Assets\PlayerInput.cs
+Assets\RPGStat.cs
