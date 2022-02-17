@@ -9,11 +9,17 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] GameObject GUIContainer;
 
+        [SerializeField] GameObject _rhand;
+
+        [SerializeField] GameObject _equipslot;
+
         Movement movement;
 
         PlayerAnimator animator;
 
         Combat combat;
+
+        Inventory inventory;
 
         #endregion
 
@@ -31,15 +37,16 @@ public class PlayerController : MonoBehaviour {
 
         public Interaction CurrentInteraction;
 
-        #endregion
+    #endregion
 
-        #region Unity Built-ins
+    #region Unity Built-ins
 
         private void Awake() {
                 CurrentState = State.DEFAULT;
                 movement = GetComponent<Movement>();
                 animator = GetComponent<PlayerAnimator>();
-                combat = GetComponent<Combat>();                
+                combat = GetComponent<Combat>();               
+                inventory = GetComponent<Inventory>(); 
                 CurrentInteraction = null;
         }
 
@@ -67,6 +74,7 @@ public class PlayerController : MonoBehaviour {
                         // Check for assigned interaction
                         case State.IDLE:
                         if(CurrentInteraction != null){
+                                Debug.Log(CurrentInteraction);
                                 // Create a movement path
                                 movement.SetDestination(CurrentInteraction.Target.transform.position);
                                 movement.SetStoppingDistance(CurrentInteraction.Distance);
@@ -129,6 +137,31 @@ public class PlayerController : MonoBehaviour {
                                 }
                                 break;
                         #endregion
+
+                        #region INTERACTING: Doing an interaction on a target within range
+                        case State.INTERACTING:
+                                // ***Proc animation would go here for reaching out for the object ***
+                                /*
+                                // Go back to traveling if target moved out of range
+                                if(movement.GetDistance(CurrentInteraction.Target) > CurrentInteraction.Distance){
+                                        movement.SetStoppingDistance(CurrentInteraction.Distance);
+                                        movement.SetDestination(CurrentInteraction.Target);
+                                        SetState(State.TRAVELLING);
+                                }
+                                */
+                                // Progress interaction
+                                //else{
+                                        //Debug.Log("Progressing interaction, progress: " + CurrentInteraction.Progress);
+                                        //if(CurrentInteraction.Progress <= 0f){
+                                                CurrentState = State.IDLE;
+                                                //SetState(State.IDLE);
+                                                DoInteraction();
+                                                Debug.Log("Grabbed");
+                                                CurrentInteraction = null;
+                                        //} else CurrentInteraction.Progress -= 1f;
+                                //}
+                                break;
+                        #endregion
                 }
         }
 
@@ -149,8 +182,8 @@ public class PlayerController : MonoBehaviour {
                         var action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
                         CurrentInteraction = new Interaction(
                                 action, 
-                                HoveredObject);
-                        SetState(action);
+                                HoveredObject,
+                                2f);
                 }
                 // Other wise move to the selected point
                 else{
@@ -176,6 +209,22 @@ public class PlayerController : MonoBehaviour {
                 }
         }
 
+        public void Sheathe(){
+                Debug.Log("Sheathing weapons");
+                inventory.Swap();
+                UpdateInventoryPositions();
+        }
+
+        public void Drop(){
+                if(inventory.HasItemInHand()){
+                        var handobj = inventory.Hand1;
+                        inventory.Clear(handobj);
+                        handobj.transform.position = this.transform.position;
+                        handobj.transform.parent = null;
+                        handobj.layer = 6;
+                }
+        }
+
         #endregion
 
         #region State Handlers?
@@ -198,10 +247,54 @@ public class PlayerController : MonoBehaviour {
                                 SetState(State.ATTACKING);
                                 break;
 
+                        case ActionType.Examine:
+                        case ActionType.Grab:
+                                SetState(State.INTERACTING);
+                                break;
+
                         default:
                                 Debug.Log("Not sure how to handle the actiontype: " + action);
                                 break;
                 }
+        }
+
+        #endregion
+
+        #region Misc functions
+
+        public void DoInteraction(){
+                switch(CurrentInteraction.Type){
+                        case ActionType.Grab:
+                                var didpickup = inventory.Pickup(CurrentInteraction.Target);
+                                if(didpickup){
+                                        //CurrentInteraction.Target.GetComponent<Interactable>().Grabbable = false;
+                                        //Debug.Log("Picking up " + CurrentInteraction.Target.name);
+                                        CurrentInteraction.Target.layer = 2;
+                                        UpdateInventoryPositions();
+                                }
+                                break;  
+
+                        default:
+                                Debug.Log("Unhandled interaction actiontype " + CurrentInteraction.Type);
+                                break;
+                }
+        }
+
+        public void UpdateInventoryPositions(){
+            if (inventory.HasItemInHand() == true)
+            {
+                Debug.Log("Moving hand inv");
+                var invhand = inventory.Hand1;
+                invhand.transform.parent = _rhand.transform;
+                invhand.transform.localPosition = new Vector3(0f, 0f, 0f);
+            }
+            if (inventory.HasItemEquipped() == true)
+            {
+                Debug.Log("Moving equipped inv");
+                var invequip = inventory.Equip1;
+                invequip.transform.parent = _equipslot.transform;
+                invequip.transform.localPosition = new Vector3(0f, -.4f, 0f);
+            }
         }
 
         #endregion

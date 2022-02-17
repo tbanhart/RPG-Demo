@@ -5,5 +5,6 @@ using UnityEngine;
 public enum ActionType{
     Examine,
     Attack,
-    Walk
+    Walk,
+    Grab
 }

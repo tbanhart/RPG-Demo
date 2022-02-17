@@ -41,6 +41,22 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Sheathe"",
+                    ""type"": ""Button"",
+                    ""id"": ""b446e0ad-d611-4ec1-8c28-093632f2d830"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Drop"",
+                    ""type"": ""Button"",
+                    ""id"": ""f909b2e0-80c2-4349-acd8-95e2d7e69956"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -74,6 +90,28 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""ContextMenu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a4415f56-d824-4d29-a030-c8f2884e045c"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Sheathe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""db176e83-e181-4169-b8e3-fa5e961263bd"",
+                    ""path"": ""<Keyboard>/q"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard&Mouse"",
+                    ""action"": ""Drop"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -654,6 +692,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Player_Select = m_Player.FindAction("Select", throwIfNotFound: true);
         m_Player_CursorPosition = m_Player.FindAction("CursorPosition", throwIfNotFound: true);
         m_Player_ContextMenu = m_Player.FindAction("ContextMenu", throwIfNotFound: true);
+        m_Player_Sheathe = m_Player.FindAction("Sheathe", throwIfNotFound: true);
+        m_Player_Drop = m_Player.FindAction("Drop", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -718,6 +758,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_Select;
     private readonly InputAction m_Player_CursorPosition;
     private readonly InputAction m_Player_ContextMenu;
+    private readonly InputAction m_Player_Sheathe;
+    private readonly InputAction m_Player_Drop;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -725,6 +767,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @Select => m_Wrapper.m_Player_Select;
         public InputAction @CursorPosition => m_Wrapper.m_Player_CursorPosition;
         public InputAction @ContextMenu => m_Wrapper.m_Player_ContextMenu;
+        public InputAction @Sheathe => m_Wrapper.m_Player_Sheathe;
+        public InputAction @Drop => m_Wrapper.m_Player_Drop;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -743,6 +787,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @ContextMenu.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnContextMenu;
                 @ContextMenu.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnContextMenu;
                 @ContextMenu.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnContextMenu;
+                @Sheathe.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSheathe;
+                @Sheathe.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSheathe;
+                @Sheathe.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSheathe;
+                @Drop.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Drop.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
+                @Drop.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnDrop;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -756,6 +806,12 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @ContextMenu.started += instance.OnContextMenu;
                 @ContextMenu.performed += instance.OnContextMenu;
                 @ContextMenu.canceled += instance.OnContextMenu;
+                @Sheathe.started += instance.OnSheathe;
+                @Sheathe.performed += instance.OnSheathe;
+                @Sheathe.canceled += instance.OnSheathe;
+                @Drop.started += instance.OnDrop;
+                @Drop.performed += instance.OnDrop;
+                @Drop.canceled += instance.OnDrop;
             }
         }
     }
@@ -915,6 +971,8 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnSelect(InputAction.CallbackContext context);
         void OnCursorPosition(InputAction.CallbackContext context);
         void OnContextMenu(InputAction.CallbackContext context);
+        void OnSheathe(InputAction.CallbackContext context);
+        void OnDrop(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

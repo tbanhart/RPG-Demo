@@ -19,6 +19,8 @@ public class InputHandler : MonoBehaviour
     InputAction select;
     InputAction contextMenu;
     InputAction cursorPosition;
+    InputAction sheathe;
+    InputAction drop;
 
     #endregion
 
@@ -48,6 +50,20 @@ public class InputHandler : MonoBehaviour
         inputActions.Player.ContextMenu.performed += OpenContextMenu;
         inputActions.Player.ContextMenu.Enable();
 
+        // Sheathe
+        sheathe = inputActions.Player.Sheathe;
+        sheathe.Enable();
+
+        inputActions.Player.Sheathe.performed += Sheathe;
+        inputActions.Player.Sheathe.Enable();
+
+        // Drop
+        drop = inputActions.Player.Drop;
+        drop.Enable();
+
+        inputActions.Player.Drop.performed += Drop;
+        inputActions.Player.Drop.Enable();
+
         // CursorPosition
         cursorPosition = inputActions.Player.CursorPosition;
         cursorPosition.Enable();
@@ -68,6 +84,14 @@ public class InputHandler : MonoBehaviour
 
     void OpenContextMenu(InputAction.CallbackContext obj){
         controller.HandleOpenContext();
+    }
+
+    void Drop(InputAction.CallbackContext obj){
+        controller.Drop();
+    }
+
+    void Sheathe(InputAction.CallbackContext obj){
+        controller.Sheathe();
     }
 
     #endregion

@@ -8,5 +8,9 @@ public enum State{
     // Processing an attack
     ATTACKING,
     // Going to an interaction destination
-    TRAVELLING
+    TRAVELLING,
+    // For executing an interaction
+    INTERACTING,
+    // Picking up an item
+    GRAB
     }

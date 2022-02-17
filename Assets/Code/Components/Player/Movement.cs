@@ -41,6 +41,10 @@ public class Movement : MonoBehaviour
         agent.destination = destination;
     }
 
+    public void SetDestination(GameObject obj){
+        SetDestination(obj.transform.position);
+    }
+
     public void CancelMovement(){
         agent.ResetPath();
     }
@@ -88,6 +92,10 @@ public class Movement : MonoBehaviour
         }
         
         return distance;
+    }
+
+    public float GetDistance(GameObject obj){
+        return GetDistance(obj.transform.position);
     }
 
     #endregion
