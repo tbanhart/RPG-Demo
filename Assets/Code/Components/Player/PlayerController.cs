@@ -175,7 +175,7 @@ public class PlayerController : MonoBehaviour {
 
                 // If a gui option isn't being selected, close the manager window
                 var guiman = GUIContainer.GetComponent<GUIManager>();
-                guiman.CloseContextMenu();
+                guiman.CloseMenus();
 
                 // If an interactable is at the cursor, do its default interaction
                 if(HoveredObject.GetComponent<Interactable>() != null){
@@ -183,7 +183,7 @@ public class PlayerController : MonoBehaviour {
                         CurrentInteraction = new Interaction(
                                 action, 
                                 HoveredObject,
-                                2f);
+                                3f);
                 }
                 // Other wise move to the selected point
                 else{
@@ -195,11 +195,11 @@ public class PlayerController : MonoBehaviour {
 
         public void HandleOpenContext(){
                 if (EventSystem.current.IsPointerOverGameObject())
-                return;
+                        return;
 
                 // If a gui option isn't being selected, close the manager window
                 var guiman = GUIContainer.GetComponent<GUIManager>();
-                guiman.CloseContextMenu();
+                guiman.CloseMenus();
 
                 // If an interactable is being selected, open the context menu
                 if (HoveredObject.GetComponent<Interactable>() != null)
@@ -273,6 +273,14 @@ public class PlayerController : MonoBehaviour {
                                         UpdateInventoryPositions();
                                 }
                                 break;  
+
+                        case ActionType.Examine:
+                                var text = CurrentInteraction.Target.GetComponent<Interactable>().ExamineText;
+                                if(text != string.Empty){
+                                        var point = CurrentInteraction.Target.transform.position;
+                                        GUIContainer.GetComponent<GUIManager>().ShowExamineText(currentcam.WorldToScreenPoint(point), text);
+                                }
+                                break;
 
                         default:
                                 Debug.Log("Unhandled interaction actiontype " + CurrentInteraction.Type);
