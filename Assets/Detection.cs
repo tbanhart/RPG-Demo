@@ -4,15 +4,37 @@ using UnityEngine;
 
 public class Detection : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
+    public List<GameObject> Targets;
+
+    public GameObject Aggro;
+
+    [SerializeField] Collider detcollider;
+
+    private void Awake() {
+        Targets = new List<GameObject>();
+        Aggro = null;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public bool HasAggro(){
+        if(Aggro == null) return false;
+        else return true;
+    }
+
+    public void AddTarget(GameObject obj){
+        Targets.Add(obj);
+        GameObject target;
+        if((target = Targets.Find(t => t.name == "Player")) != null){
+            Aggro = target;
+        }
+    }
+
+    public void RemoveTarget(GameObject obj){
+        Targets.Remove(obj);
+    }
+
+    public List<GameObject> GetTargets(bool awareness){
+        return Targets;
     }
 }
+
+
