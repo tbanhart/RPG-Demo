@@ -15,7 +15,7 @@ public class PlayerController : MonoBehaviour {
 
         Movement movement;
 
-        PlayerAnimator animator;
+        ActorAnimator animator;
 
         Combat combat;
 
@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour {
         private void Awake() {
                 CurrentState = State.DEFAULT;
                 movement = GetComponent<Movement>();
-                animator = GetComponent<PlayerAnimator>();
+                animator = GetComponent<ActorAnimator>();
                 combat = GetComponent<Combat>();               
                 inventory = GetComponent<Inventory>(); 
                 CurrentInteraction = null;

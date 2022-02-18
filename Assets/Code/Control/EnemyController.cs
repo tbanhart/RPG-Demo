@@ -10,7 +10,7 @@ public class EnemyController : MonoBehaviour
 
     Inventory inventory;
 
-    PlayerAnimator animator;
+    ActorAnimator animator;
 
     Interaction CurrentInteraction;
 
@@ -28,7 +28,7 @@ public class EnemyController : MonoBehaviour
         movement = GetComponent<Movement>();
         combat = GetComponent<Combat>();
         inventory = GetComponent<Inventory>();
-        animator = GetComponent<PlayerAnimator>();
+        animator = GetComponent<ActorAnimator>();
         detection = GetComponent<Detection>();
         CurrentInteraction = null;
         SetState(State.IDLE);
