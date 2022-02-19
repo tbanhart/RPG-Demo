@@ -5,19 +5,19 @@ using UnityEngine;
 public class Combat : MonoBehaviour
 {
     [SerializeField] public float Range;
-    [SerializeField] float Cooldown;
+    [SerializeField] public float Cooldown;
 
     RPGStat Life = new RPGStat(10f);
     RPGStat Stamina = new RPGStat(10f);
     RPGStat WeaponDamage = new RPGStat(5f);
     RPGStat AttackSpeed = new RPGStat(1f);
 
-    AttackStage attackStage;
-
+    public AttackStage attackStage;
 
     public AttackType attackType;
 
     private void Awake() {
+        Cooldown = 0f;
         attackType = new AttackType(){
             Name = "Unarmed",
             Windup = 10f * Time.deltaTime * 2f,
@@ -25,11 +25,16 @@ public class Combat : MonoBehaviour
         };
     }
 
+    public void StartAttack(){
+        Cooldown = 0f;
+        attackStage = AttackStage.START;
+    }
+
     public bool DoAttack(Combat target){
         //Debug.Log(Cooldown);
         Debug.Log(attackStage);
         switch(attackStage){
-            case AttackStage.DEFAULT:
+            case AttackStage.START:
                 Debug.Log("Starting windup");
                 Cooldown = attackType.Windup;
                 SetStage(AttackStage.WINDUP);
@@ -47,7 +52,7 @@ public class Combat : MonoBehaviour
                 var isdead = target.TakeDamage(WeaponDamage.Current);
                 if (isdead == true) {
                     Debug.Log("Target is dead");
-                    SetStage(AttackStage.DEFAULT); 
+                    SetStage(AttackStage.START); 
                     return true;
                 }
                 else{ 
@@ -58,7 +63,7 @@ public class Combat : MonoBehaviour
                 Debug.Log("Winding down");
                 Cooldown -= 1f * Time.deltaTime;
                 if(Cooldown <= 0f){
-                    SetStage(AttackStage.DEFAULT);
+                    SetStage(AttackStage.START);
                 } break;            
         }
         return false;
@@ -82,5 +87,6 @@ public class Combat : MonoBehaviour
         attackStage = stage;
     }
 
-    enum AttackStage{DEFAULT, WINDUP, DAMAGE, COOLDOWN}
+    public void ProgressAttack(){}
+
 }

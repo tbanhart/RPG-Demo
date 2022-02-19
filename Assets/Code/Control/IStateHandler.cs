@@ -12,7 +12,13 @@ public interface IStateHandler
 
     Combat combat {get;set;}
 
-    Interaction CurrentInteraction {get;set;}
+    Interaction currentInteraction {get;set;}
+
+    Vector3 selectorPosition {get; set;}
+
+    State currentState {get; set;}
+
+    void HandleState();
 
     void HandleIdle();
 
@@ -23,4 +29,8 @@ public interface IStateHandler
     void HandleTravelling();
 
     void HandleInteracting();
+
+    void SetState(State state);
+
+    void SetState(ActionType action);
 }
