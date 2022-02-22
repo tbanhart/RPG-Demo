@@ -9,10 +9,6 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] GameObject GUIContainer;
 
-        [SerializeField] GameObject _rhand;
-
-        [SerializeField] GameObject _equipslot;
-
         [SerializeField] State debugState;
 
         PlayerHandler handler;
@@ -40,7 +36,7 @@ public class PlayerController : MonoBehaviour {
         #region Unity Built-ins
 
         private void Awake() {
-                handler = new PlayerHandler(this.gameObject, _rhand, _equipslot, currentcam, GUIContainer);
+                handler = new PlayerHandler(this.gameObject, currentcam, GUIContainer);
 
                 CurrentState = State.DEFAULT;
                 inventory = GetComponent<Inventory>(); 

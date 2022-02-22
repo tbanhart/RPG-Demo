@@ -15,12 +15,23 @@ public class Inventory : MonoBehaviour
     //InventoryItem _hand1 {get => Items[(int)InventorySlot.HAND1]; set => Items[(int)InventorySlot.HAND1] = value;}
     //InventoryItem _equip1 {get => Items[(int)InventorySlot.EQUIP1]; set => Items[(int)InventorySlot.EQUIP1] = value;}
 
+    #region Inventory Slot Properties
+
+    // ***This will be way less painful to add things to if I create an object that has the following 
+    //  info in it***
+
+    // Locations for where objects go when equipped or held
+    [SerializeField] public GameObject HandLocation;
+    [SerializeField] public GameObject EquipLocation;
+
+    // Accessors for inventory slots
     public GameObject Hand1 {get => _hand1.GetItem();}
     public GameObject Equip1 {get => _equip1.GetItem();}
 
     InventoryItem _hand1 {get; set;}
-
     InventoryItem _equip1 {get; set;}
+
+    #endregion
 
     // It made sense to make this a class to read the inv item as a gameobject or reference to data
     List<InventoryItem> Items;

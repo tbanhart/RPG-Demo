@@ -24,9 +24,9 @@ public abstract class StateHandlerBase : IStateHandler
 
     public State currentState { get; set; }
 
-    public GameObject handPosition { get; set; }
+    public GameObject handPosition { get => inventory.HandLocation; }
 
-    public GameObject sheathePosition { get; set; }
+    public GameObject sheathePosition { get => inventory.EquipLocation; }
 
     public Camera maincam { get; set; }
 
@@ -34,11 +34,9 @@ public abstract class StateHandlerBase : IStateHandler
 
     #endregion
 
-    public StateHandlerBase(GameObject owner, GameObject hand, GameObject sheathe, Camera cam, GameObject gui){
+    public StateHandlerBase(GameObject owner, Camera cam, GameObject gui){
         // Set entered objects from owner
         Owner = owner;
-        handPosition = hand;
-        sheathePosition = sheathe;
         maincam = cam;
         guiContainer = gui;
 
