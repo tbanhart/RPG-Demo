@@ -65,7 +65,10 @@ public class GUIManager : MonoBehaviour
         examineTextPanel.GetComponent<RectTransform>().position = point;
     }
 
-    public void CloseExamineText(){}
+    public void CloseExamineText(){
+        examineText.ClearText();
+        examineTextPanel.SetActive(false);
+    }
 
     #endregion
 }

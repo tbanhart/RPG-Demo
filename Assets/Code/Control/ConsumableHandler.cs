@@ -213,6 +213,7 @@ public abstract class StateHandlerBase : IStateHandler
                 break;
 
             case ActionType.Examine:
+            // ***Later interactions will take a duration to complete, for now it just handles them like they're all instantaneous ***
                 var text = currentInteraction.Target.GetComponent<Interactable>().ExamineText;
                 if (text != string.Empty)
                 {

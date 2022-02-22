@@ -17,12 +17,6 @@ public class PlayerController : MonoBehaviour {
 
         PlayerHandler handler;
 
-        Movement movement;
-
-        ActorAnimator animator;
-
-        Combat combat;
-
         Inventory inventory;
 
         #endregion
@@ -49,9 +43,6 @@ public class PlayerController : MonoBehaviour {
                 handler = new PlayerHandler(this.gameObject, _rhand, _equipslot, currentcam, GUIContainer);
 
                 CurrentState = State.DEFAULT;
-                movement = GetComponent<Movement>();
-                animator = GetComponent<ActorAnimator>();
-                combat = GetComponent<Combat>();               
                 inventory = GetComponent<Inventory>(); 
                 CurrentInteraction = null;
         }
