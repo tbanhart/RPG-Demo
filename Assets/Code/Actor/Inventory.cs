@@ -18,17 +18,17 @@ public class Inventory : MonoBehaviour
     // ***Added this to reference the slot information quickly, may change it around later if I think it's messy***
     Dictionary<InventorySlot, SlotData> _slotData;
 
-    // Locations for where objects go when equipped or held
+    // Outside reference for the object currently in a slot
     [SerializeField] public GameObject HandLocation;
     [SerializeField] public GameObject EquipLocation;
     [SerializeField] public GameObject Equip2Location;
     [SerializeField] public GameObject WaistLocation;
 
     // Public accessors for inventory slot parent locations
-    public GameObject Hand1 {get => _slotData[InventorySlot.HAND1].SlotParent;}
-    public GameObject Equip1 {get => _slotData[InventorySlot.EQUIP1].SlotParent;}
-    public GameObject Equip2 {get => _slotData[InventorySlot.EQUIP2].SlotParent;}
-    public GameObject Waist {get => _slotData[InventorySlot.WAIST].SlotParent;}
+    public GameObject Hand1 {get => _hand1.GetItem();}
+    public GameObject Equip1 {get => _equip1.GetItem();}
+    public GameObject Equip2 {get => _equip2.GetItem();}
+    public GameObject Waist {get => _waist.GetItem();}
  
     InventoryItem _hand1 {get => GetSlotItem(InventorySlot.HAND1); 
         set => _slotData[InventorySlot.HAND1].Item = value;}
@@ -48,10 +48,10 @@ public class Inventory : MonoBehaviour
         // Initalize inventory slot data
         // ***This is subject to change in a later fix, for now I think it's pretty concise***
         _slotData = new Dictionary<InventorySlot, SlotData>(){
-            {InventorySlot.HAND1, new SlotData(InventorySlot.HAND1, Hand1)},
-            {InventorySlot.EQUIP1, new SlotData(InventorySlot.EQUIP1, Equip1)},
-            {InventorySlot.EQUIP2, new SlotData(InventorySlot.EQUIP2, Equip2)},
-            {InventorySlot.WAIST, new SlotData(InventorySlot.WAIST, Waist)}
+            {InventorySlot.HAND1, new SlotData(InventorySlot.HAND1, HandLocation)},
+            {InventorySlot.EQUIP1, new SlotData(InventorySlot.EQUIP1, EquipLocation)},
+            {InventorySlot.EQUIP2, new SlotData(InventorySlot.EQUIP2, Equip2Location)},
+            {InventorySlot.WAIST, new SlotData(InventorySlot.WAIST, WaistLocation)}
         };
 
         // Initialize inventory
