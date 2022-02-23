@@ -2,7 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class StateHandlerBase : IStateHandler
+// Container for the state machine logic of a generic actor
+public abstract class ConsumableHandler : IStateHandler
 {
     #region Properties
 
@@ -34,7 +35,7 @@ public abstract class StateHandlerBase : IStateHandler
 
     #endregion
 
-    public StateHandlerBase(GameObject owner, Camera cam, GameObject gui){
+    public ConsumableHandler(GameObject owner, Camera cam, GameObject gui){
         // Set entered objects from owner
         Owner = owner;
         maincam = cam;

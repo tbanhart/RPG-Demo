@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour {
         private void Awake() {
                 handler = new PlayerHandler(this.gameObject, currentcam, GUIContainer);
 
-                CurrentState = State.DEFAULT;
+                CurrentState = State.IDLE;
                 inventory = GetComponent<Inventory>(); 
                 CurrentInteraction = null;
         }
@@ -70,6 +70,7 @@ public class PlayerController : MonoBehaviour {
         #region Input Handlers
 
         public void HandleSelect(){
+                // Make the UI mask input
                 if(EventSystem.current.IsPointerOverGameObject())
                         return;
 
