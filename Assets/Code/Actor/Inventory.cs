@@ -15,8 +15,8 @@ public class Inventory : MonoBehaviour
 
     #region Inventory Slot Properties
 
-    // ***This will be way less painful to add things to if I create an object that has the following 
-    //  info in it***
+    // ***Added this to reference the slot information quickly, may change it around later if I think it's messy***
+    Dictionary<InventorySlot, SlotData> _slotData;
 
     // Locations for where objects go when equipped or held
     [SerializeField] public GameObject HandLocation;
@@ -24,20 +24,36 @@ public class Inventory : MonoBehaviour
     [SerializeField] public GameObject Equip2Location;
     [SerializeField] public GameObject WaistLocation;
 
-    // Accessors for inventory slots
-    public GameObject Hand1 {get => _hand1.GetItem();}
-    public GameObject Equip1 {get => _equip1.GetItem();}
-    public GameObject Equip2 {get => _equip2.GetItem();}
-    public GameObject Waist {get => _waist.GetItem();}
+    // Public accessors for inventory slot parent locations
+    public GameObject Hand1 {get => _slotData[InventorySlot.HAND1].SlotParent;}
+    public GameObject Equip1 {get => _slotData[InventorySlot.EQUIP1].SlotParent;}
+    public GameObject Equip2 {get => _slotData[InventorySlot.EQUIP2].SlotParent;}
+    public GameObject Waist {get => _slotData[InventorySlot.WAIST].SlotParent;}
  
-    InventoryItem _hand1 {get; set;}
-    InventoryItem _equip1 {get; set;}
-    InventoryItem _equip2 {get; set;}
-    InventoryItem _waist {get; set;}
+    InventoryItem _hand1 {get => GetSlotItem(InventorySlot.HAND1); 
+        set => _slotData[InventorySlot.HAND1].Item = value;}
+    InventoryItem _equip1 {get => GetSlotItem(InventorySlot.EQUIP1);
+        set => _slotData[InventorySlot.EQUIP1].Item = value;
+    }
+    InventoryItem _equip2 {get => GetSlotItem(InventorySlot.EQUIP2);
+        set => _slotData[InventorySlot.EQUIP2].Item = value;
+    }
+    InventoryItem _waist {get => GetSlotItem(InventorySlot.WAIST);
+        set => _slotData[InventorySlot.WAIST].Item = value;
+    }
 
     #endregion
 
     private void Awake() {
+        // Initalize inventory slot data
+        // ***This is subject to change in a later fix, for now I think it's pretty concise***
+        _slotData = new Dictionary<InventorySlot, SlotData>(){
+            {InventorySlot.HAND1, new SlotData(InventorySlot.HAND1, Hand1)},
+            {InventorySlot.EQUIP1, new SlotData(InventorySlot.EQUIP1, Equip1)},
+            {InventorySlot.EQUIP2, new SlotData(InventorySlot.EQUIP2, Equip2)},
+            {InventorySlot.WAIST, new SlotData(InventorySlot.WAIST, Waist)}
+        };
+
         // Initialize inventory
         _hand1 = null;
         _equip1 = null;
@@ -164,6 +180,29 @@ public class Inventory : MonoBehaviour
         if(_equip1 == null && _equip2 == null){
             return false;
         } else return true;
+    }
+
+    // This keeps the game from returning an error when retrieving a null item from a slot
+    InventoryItem GetSlotItem(InventorySlot slot){
+        if(_slotData[slot].HasItem() == false) return null;
+        else return _slotData[slot].Item;
+    }
+}
+
+public class SlotData{
+    public InventorySlot Slot {get; set;}
+    public InventoryItem Item {get; set;}
+    public GameObject SlotParent {get; set;}
+
+    public SlotData(InventorySlot slot, GameObject slotParent, InventoryItem item = null){
+        Slot = slot;
+        Item = item;
+        SlotParent = slotParent;
+    }
+
+    public bool HasItem(){
+        if(Item == null) return false;
+        else return true;
     }
 }
 
