@@ -123,6 +123,12 @@ public class PlayerController : MonoBehaviour {
                         handobj.transform.position = this.transform.position;
                         handobj.transform.parent = null;
                         handobj.layer = 6;
+                } else if(inventory.HasItemEquipped()){
+                        var obj = inventory.Equip2;
+                        inventory.Clear(obj);
+                        obj.transform.position = this.transform.position;
+                        obj.transform.parent = null;
+                        obj.layer = 6;
                 }
         }
 

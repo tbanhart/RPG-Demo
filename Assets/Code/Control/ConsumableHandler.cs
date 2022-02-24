@@ -233,17 +233,31 @@ public abstract class ConsumableHandler : IStateHandler
     {
         if (inventory.HasItemInHand() == true)
         {
-            Debug.Log("Moving hand inv");
             var invhand = inventory.Hand1;
+            var invinter = invhand.GetComponent<Interactable>();
+            var rot = invinter.HandOffsetRot;
             invhand.transform.parent = handPosition.transform;
-            invhand.transform.localPosition = new Vector3(0f, 0f, 0f);
+            invhand.transform.localPosition = invinter.HandOffsetPos;
+            invhand.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+
         }
         if (inventory.HasItemEquipped() == true)
         {
-            Debug.Log("Moving equipped inv");
             var invequip = inventory.Equip1;
+            var invinter = invequip.GetComponent<Interactable>();
+            var rot = invinter.EquipOffsetRot;
             invequip.transform.parent = sheathePosition.transform;
-            invequip.transform.localPosition = new Vector3(0f, -.4f, 0f);
+            invequip.transform.localPosition = invinter.EquipOffsetPos;
+            invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+        }
+        if (inventory.HasEquipment() == true){
+            var invequip = inventory.Equip2;
+            var invinter = invequip.GetComponent<Interactable>();
+            var rot = invinter.EquipOffsetRot;
+            invequip.transform.parent = sheathePosition.transform;
+            invequip.transform.localPosition = invinter.EquipOffsetPos;
+            invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+
         }
     }
 

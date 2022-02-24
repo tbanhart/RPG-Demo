@@ -108,6 +108,14 @@ public class Inventory : MonoBehaviour
     public bool Swap(){
         InventoryItem item;
         var hand1 = _hand1;
+
+        // *** This gets a rework eventually, it's pretty nasty right now ***
+        if(_hand1 != null && _hand1.Equipment == true && _equip2 == null){
+            _equip2 = _hand1;
+            _hand1 = null;
+            return true;
+        }
+
         // Try to equip from slot 1
         if(_equip1 != null){
 
@@ -168,6 +176,7 @@ public class Inventory : MonoBehaviour
         if(_waist != null && Waist == obj) _waist = null;
     }
 
+    // *** This should just be replaced by checking all thru an array or smth***
     // Check if hands are free
     public bool HasItemInHand(){
         if(_hand1 == null){
@@ -177,7 +186,14 @@ public class Inventory : MonoBehaviour
 
     // Check if equip slots are free
     public bool HasItemEquipped(){
-        if(_equip1 == null && _equip2 == null){
+        if(_equip1 == null){
+            return false;
+        } else return true;
+    }
+
+    // Check equipment slot
+    public bool HasEquipment(){
+        if(_equip2 == null){
             return false;
         } else return true;
     }
@@ -212,11 +228,14 @@ public class InventoryItem
 
     public bool Equippable;
 
+    public bool Equipment;
+
     float Weight;
 
     public InventoryItem(GameObject item){
         Item = item;
         Equippable = item.GetComponent<Interactable>().Equippable;
+        Equipment = item.GetComponent<Interactable>().Equipment;
         Weight = item.GetComponent<Interactable>().Weight;
     }
 
