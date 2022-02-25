@@ -11,6 +11,8 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] State debugState;
 
+        [SerializeField] CameraControl cameraControl;
+
         PlayerHandler handler;
 
         Inventory inventory;
@@ -31,6 +33,16 @@ public class PlayerController : MonoBehaviour {
 
         public Interaction CurrentInteraction {get => handler.currentInteraction; set => handler.currentInteraction = value;}
 
+        [SerializeField] float CamRotateVelocity;
+
+        [SerializeField] float CamZoomVelocity;
+
+        float CurrentCamRotate = 0f;
+
+        float CurrentCamZoom = 0f;
+
+        GameObject CameraTarget;
+        
         #endregion
 
         #region Unity Built-ins
@@ -40,10 +52,19 @@ public class PlayerController : MonoBehaviour {
 
                 CurrentState = State.IDLE;
                 inventory = GetComponent<Inventory>(); 
+                cameraControl = GetComponent<CameraControl>();
                 CurrentInteraction = null;
+                CameraTarget = new GameObject();
+                currentcam.transform.SetParent(CameraTarget.transform);
+                cameraControl.CameraTarget = CameraTarget;
         }
 
         private void Update() {
+                // Send updates to the camera
+                CameraTarget.transform.position = transform.position;
+                cameraControl.OffsetRotation(CurrentCamRotate);
+                cameraControl.OffsetZoom(CurrentCamZoom);
+
                 // Get the raycast for selection purposes
                 var ray = currentcam.ScreenPointToRay(CursorPosition);
                 RaycastHit hit;
@@ -53,6 +74,7 @@ public class PlayerController : MonoBehaviour {
                         if(hit.collider == null){
                         }
                         else {
+                                Debug.Log(hit.collider.gameObject.name);
                                 SelectorPosition = hit.point;
                                 HoveredObject = hit.collider.gameObject;
                         }
@@ -130,6 +152,14 @@ public class PlayerController : MonoBehaviour {
                         obj.transform.parent = null;
                         obj.layer = 6;
                 }
+        }
+
+        public void RotateCamera(float offset){
+                CurrentCamRotate = offset * CamRotateVelocity;
+        }
+
+        public void ZoomCamera(float offset){
+                CurrentCamZoom = offset * CamZoomVelocity;
         }
 
         #endregion

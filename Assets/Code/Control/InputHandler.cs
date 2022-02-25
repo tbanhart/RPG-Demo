@@ -21,6 +21,8 @@ public class InputHandler : MonoBehaviour
     InputAction cursorPosition;
     InputAction sheathe;
     InputAction drop;
+    InputAction rotateCamera;
+    InputAction zoomCamera;
 
     #endregion
 
@@ -67,6 +69,22 @@ public class InputHandler : MonoBehaviour
         // CursorPosition
         cursorPosition = inputActions.Player.CursorPosition;
         cursorPosition.Enable();
+
+        //RotateCamera
+        rotateCamera = inputActions.Player.RotateCamera;
+        rotateCamera.Enable();
+
+        inputActions.Player.RotateCamera.performed += Rotate;
+        inputActions.Player.RotateCamera.canceled += Rotate;
+        inputActions.Player.RotateCamera.Enable();
+
+        //ZoomCamera
+        zoomCamera = inputActions.Player.ZoomCamera;
+        zoomCamera.Enable();
+
+        inputActions.Player.ZoomCamera.performed += Zoom;
+        inputActions.Player.ZoomCamera.canceled += Zoom;
+        inputActions.Player.ZoomCamera.Enable();
     }
 
     private void OnDisable() {
@@ -92,6 +110,14 @@ public class InputHandler : MonoBehaviour
 
     void Sheathe(InputAction.CallbackContext obj){
         controller.Sheathe();
+    }
+
+    void Rotate(InputAction.CallbackContext obj){
+        controller.RotateCamera(obj.ReadValue<float>());
+    }
+
+    void Zoom(InputAction.CallbackContext obj){
+        controller.ZoomCamera(obj.ReadValue<float>());
     }
 
     #endregion
