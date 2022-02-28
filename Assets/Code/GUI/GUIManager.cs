@@ -21,6 +21,7 @@ public class GUIManager : MonoBehaviour
     private void Awake() {
         contextMenu = GetComponent<ContextMenu>();
         examineText = GetComponent<ExamineText>();
+        CloseMenus();
     }
 
     #endregion
@@ -49,7 +50,6 @@ public class GUIManager : MonoBehaviour
 
     public void CloseContextMenu(){
         if(contextMenuPanel.activeSelf == true){
-            contextMenu.GetComponent<ContextMenu>().Close();
             contextMenuPanel.SetActive(false);
         }
     }
@@ -66,8 +66,9 @@ public class GUIManager : MonoBehaviour
     }
 
     public void CloseExamineText(){
-        examineText.ClearText();
-        examineTextPanel.SetActive(false);
+        if(examineTextPanel.activeSelf == true){
+            examineTextPanel.SetActive(false);
+        }
     }
 
     #endregion

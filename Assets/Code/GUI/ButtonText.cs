@@ -8,6 +8,9 @@ public class ButtonText : MonoBehaviour
 {
     [SerializeField] GameObject buttonText;
 
+    private void Awake() {
+    }
+
     public void SetText(string text){
         buttonText.GetComponent<Text>().text = text;
     }

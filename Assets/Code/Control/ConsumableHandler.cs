@@ -36,6 +36,8 @@ public abstract class ConsumableHandler : IStateHandler
     #endregion
 
     public ConsumableHandler(GameObject owner, Camera cam, GameObject gui){
+
+
         // Set entered objects from owner
         Owner = owner;
         maincam = cam;

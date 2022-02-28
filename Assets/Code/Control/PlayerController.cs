@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] State debugState;
 
-        [SerializeField] CameraControl cameraControl;
+        CameraControl cameraControl;
 
         PlayerHandler handler;
 
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour {
         // Be pretty nice if this was a component eventually wunnit?
         [SerializeField] public Vector3 SelectorPosition {get => handler.selectorPosition; set => handler.selectorPosition = value;}
 
-        [SerializeField] public GameObject HoveredObject;
+        public GameObject HoveredObject;
 
         public Interaction CurrentInteraction {get => handler.currentInteraction; set => handler.currentInteraction = value;}
 
@@ -74,14 +74,12 @@ public class PlayerController : MonoBehaviour {
                         if(hit.collider == null){
                         }
                         else {
-                                Debug.Log(hit.collider.gameObject.name);
                                 SelectorPosition = hit.point;
                                 HoveredObject = hit.collider.gameObject;
                         }
                 }
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 5)))
-                Debug.Log("Button clicked");
-
+                        Debug.Log("Button Clicked");
                 // State Machine
                 handler.HandleState();
                 debugState = CurrentState;
@@ -93,8 +91,7 @@ public class PlayerController : MonoBehaviour {
 
         public void HandleSelect(){
                 // Make the UI mask input
-                if(EventSystem.current.IsPointerOverGameObject())
-                        return;
+                if(EventSystem.current.IsPointerOverGameObject()) return;
 
                 // If a gui option isn't being selected, close the manager window
                 var guiman = GUIContainer.GetComponent<GUIManager>();
@@ -127,7 +124,6 @@ public class PlayerController : MonoBehaviour {
                 // If an interactable is being selected, open the context menu
                 if (HoveredObject.GetComponent<Interactable>() != null)
                 {
-                        Debug.Log(HoveredObject.name);
                         guiman.OpenContextMenu(CursorPosition, HoveredObject);
                 }
         }
