@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour {
                 guiman.CloseMenus();
 
                 // If an interactable is at the cursor, do its default interaction
-                if(HoveredObject.GetComponent<Interactable>() != null){
+                if(HoveredObject != null && HoveredObject.GetComponent<Interactable>() != null){
                         var action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
                         CurrentInteraction = new Interaction(
                                 action, 
@@ -124,7 +124,7 @@ public class PlayerController : MonoBehaviour {
                 // If an interactable is being selected, open the context menu
                 if (HoveredObject.GetComponent<Interactable>() != null)
                 {
-                        guiman.OpenContextMenu(CursorPosition, HoveredObject);
+                        guiman.OpenContextMenu(this.gameObject, CursorPosition, HoveredObject);
                 }
         }
 
@@ -156,6 +156,12 @@ public class PlayerController : MonoBehaviour {
 
         public void ZoomCamera(float offset){
                 CurrentCamZoom = offset * CamZoomVelocity;
+        }
+
+        public void AddInteraction(ActionType action, GameObject target){
+                GUIContainer.GetComponent<GUIManager>().CloseContextMenu();
+                CurrentInteraction = new Interaction(action, target);
+                handler.SetState(action);
         }
 
         #endregion

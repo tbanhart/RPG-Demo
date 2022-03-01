@@ -2,14 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public class ExamineText : MonoBehaviour
 {
     [SerializeField] GameObject TextObject;
-    Text displaytext;
+    TextMeshProUGUI displaytext;
 
     private void Awake() {
-        displaytext = TextObject.GetComponent<Text>();
+        displaytext = TextObject.GetComponent<TextMeshProUGUI>();
     }
 
     internal void SetText(string text){

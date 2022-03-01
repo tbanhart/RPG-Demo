@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &3186530618886971021
+--- !u!1 &508678342272663786
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,46 +8,47 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8370795423636032935}
-  - component: {fileID: 845955816491751961}
-  - component: {fileID: 7925582729954970669}
-  - component: {fileID: 4048772064035676144}
-  m_Layer: 9
-  m_Name: StoneFloor
+  - component: {fileID: 884078736501676624}
+  - component: {fileID: 4317610054424958453}
+  - component: {fileID: 2022059272543101247}
+  - component: {fileID: 850715855468414060}
+  - component: {fileID: 850715855468414063}
+  m_Layer: 6
+  m_Name: backpack
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 8
+  m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &8370795423636032935
+--- !u!4 &884078736501676624
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3186530618886971021}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_GameObject: {fileID: 508678342272663786}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: -0, w: 0.7071067}
+  m_LocalPosition: {x: -2.07, y: 0.124, z: 11.98}
+  m_LocalScale: {x: 20, y: 20, z: 20}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &845955816491751961
+--- !u!33 &4317610054424958453
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3186530618886971021}
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &7925582729954970669
+  m_GameObject: {fileID: 508678342272663786}
+  m_Mesh: {fileID: -5003366202268185646, guid: 4b19ccf20d2aecb46b3620641dba4d62, type: 3}
+--- !u!23 &2022059272543101247
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3186530618886971021}
+  m_GameObject: {fileID: 508678342272663786}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -60,7 +61,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 0e38c673bd299ec4ba99ab887eac5dad, type: 2}
+  - {fileID: -876546973899608171, guid: 4b19ccf20d2aecb46b3620641dba4d62, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -82,17 +83,39 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!64 &4048772064035676144
+--- !u!64 &850715855468414060
 MeshCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3186530618886971021}
+  m_GameObject: {fileID: 508678342272663786}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 4
   m_Convex: 0
   m_CookingOptions: 30
-  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: -5003366202268185646, guid: 4b19ccf20d2aecb46b3620641dba4d62, type: 3}
+--- !u!114 &850715855468414063
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 508678342272663786}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c77919958bdc35743a2739c743c8020a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  AvailableActions: 03000000
+  Grabbable: 1
+  Equippable: 1
+  Equipment: 1
+  HandOffsetPos: {x: 0, y: 0.18, z: 0}
+  HandOffsetRot: {x: 0, y: 0, z: 0}
+  EquipOffsetPos: {x: -0.13, y: -0.3, z: 0}
+  EquipOffsetRot: {x: 0, y: -90, z: 0}
+  Weight: 0
+  ExamineText: 

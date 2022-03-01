@@ -38,13 +38,14 @@ public class GUIManager : MonoBehaviour
 
     #region Context Menu
 
-    public void OpenContextMenu(Vector3 point, GameObject obj)
+    public void OpenContextMenu(GameObject player, Vector3 point, GameObject obj)
     {
         contextMenuPanel.SetActive(true);
         contextMenu.ClearMenu();
         contextMenuPanel.GetComponent<RectTransform>().position = point;
+        contextMenu.Target = obj;
         foreach(var action in obj.GetComponent<Interactable>().AvailableActions){
-            contextMenu.AddAction(action);
+            contextMenu.AddAction(player, action);
         }
     }
 

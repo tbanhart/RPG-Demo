@@ -13,6 +13,8 @@ public class ContextMenu : MonoBehaviour
 
     GridLayoutGroup gridSettings;
 
+    public GameObject Target {get; set;}
+
     public ContextMenu(){
         Buttons = new List<GameObject>();
     }
@@ -23,11 +25,12 @@ public class ContextMenu : MonoBehaviour
         ActionsUIPanel.GetComponent<GridLayoutGroup>().cellSize.Set(300, sellsize.y);
     }
 
-    public void AddAction(ActionType action){
+    public void AddAction(GameObject player, ActionType action){
         var button = Instantiate(Button);
         button.transform.SetParent(ActionsUIPanel.transform);
         Buttons.Add(button);
-        button.GetComponent<ButtonText>().SetText($"{action}");
+        button.GetComponent<ButtonText>().SetupButton(player, $"{action}", action, Target);
+        button.GetComponent<ButtonText>().ID = Buttons.FindIndex(o => o == button);
     }
 
     public void ClearMenu(){

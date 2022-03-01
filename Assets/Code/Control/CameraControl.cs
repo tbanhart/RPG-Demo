@@ -7,6 +7,7 @@ public class CameraControl : MonoBehaviour
     [SerializeField] Vector3 ResetPosition;
     [SerializeField] Vector3 CurrentOffset;
 
+    [SerializeField] float DefaultZoom;
     [SerializeField] float MaxZoom;
     [SerializeField] float MinZoom;
     [SerializeField] float CurrentZoom;
