@@ -7,6 +7,7 @@ public class Interactable : MonoBehaviour
 {
     [SerializeField] public List<ActionType> AvailableActions;
     #region Grabbing/Equipping details: See below editor script for these
+    [SerializeField] public Vector3 DefaultRotation;
     [HideInInspector] public bool Grabbable;
     [HideInInspector] public bool Equippable;
     [HideInInspector] public bool Equipment;

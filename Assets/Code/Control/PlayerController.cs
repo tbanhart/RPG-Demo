@@ -135,15 +135,23 @@ public class PlayerController : MonoBehaviour {
         }
 
         public void Drop(){
+                // *** These could be convinced into one execution ***
+                // *** These should also be moved to inventory maybe? ***
                 if(inventory.HasItemInHand()){
                         var handobj = inventory.Hand1;
+                        var startingrot = handobj.GetComponent<Interactable>().DefaultRotation;
                         inventory.Clear(handobj);
                         handobj.transform.position = this.transform.position;
                         handobj.transform.parent = null;
+                        handobj.transform.rotation = new Quaternion();
+                        handobj.transform.localRotation = Quaternion.Euler(startingrot.x, startingrot.y, startingrot.z);
                         handobj.layer = 6;
                 } else if(inventory.HasItemEquipped()){
                         var obj = inventory.Equip2;
+                        var startingrot = obj.GetComponent<Interactable>().DefaultRotation;
                         inventory.Clear(obj);
+                        obj.transform.rotation = new Quaternion();
+                        obj.transform.localRotation = Quaternion.Euler(startingrot.x, startingrot.y, startingrot.z);
                         obj.transform.position = this.transform.position;
                         obj.transform.parent = null;
                         obj.layer = 6;

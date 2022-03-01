@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   AvailableActions: 03000000
+  DefaultRotation: {x: 90, y: 0, z: 0}
   Grabbable: 1
   Equippable: 1
   Equipment: 0
@@ -150,7 +151,7 @@ MonoBehaviour:
   EquipOffsetPos: {x: -0.48, y: -0.22, z: -0.27}
   EquipOffsetRot: {x: 90, y: -180, z: -225}
   Weight: 0
-  ExamineText: 
+  ExamineText: I made this like two years ago ^.^
 --- !u!1 &5840132781493214805
 GameObject:
   m_ObjectHideFlags: 0
