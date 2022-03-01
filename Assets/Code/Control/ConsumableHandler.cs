@@ -240,8 +240,8 @@ public abstract class ConsumableHandler : IStateHandler
             var rot = invinter.HandOffsetRot;
             invhand.transform.parent = handPosition.transform;
             invhand.transform.localPosition = invinter.HandOffsetPos;
+            invhand.transform.localRotation = new Quaternion();
             invhand.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
-
         }
         if (inventory.HasItemEquipped() == true)
         {
@@ -250,6 +250,7 @@ public abstract class ConsumableHandler : IStateHandler
             var rot = invinter.EquipOffsetRot;
             invequip.transform.parent = sheathePosition.transform;
             invequip.transform.localPosition = invinter.EquipOffsetPos;
+            invequip.transform.localRotation = new Quaternion();
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
         }
         if (inventory.HasEquipment() == true){
@@ -258,8 +259,8 @@ public abstract class ConsumableHandler : IStateHandler
             var rot = invinter.EquipOffsetRot;
             invequip.transform.parent = sheathePosition.transform;
             invequip.transform.localPosition = invinter.EquipOffsetPos;
+            invequip.transform.localRotation = new Quaternion();
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
-
         }
     }
 
