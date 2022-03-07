@@ -23,6 +23,7 @@ public class InputHandler : MonoBehaviour
     InputAction drop;
     InputAction rotateCamera;
     InputAction zoomCamera;
+    InputAction resetCamera;
 
     #endregion
 
@@ -85,6 +86,14 @@ public class InputHandler : MonoBehaviour
         inputActions.Player.ZoomCamera.performed += Zoom;
         inputActions.Player.ZoomCamera.canceled += Zoom;
         inputActions.Player.ZoomCamera.Enable();
+
+        //ResetCamera
+        resetCamera = inputActions.Player.ResetCamera;
+        resetCamera.Enable();
+
+        inputActions.Player.ResetCamera.performed += ResetCamera;
+        inputActions.Player.ResetCamera.canceled += ResetCamera;
+        inputActions.Player.ResetCamera.Enable();
     }
 
     private void OnDisable() {
@@ -118,6 +127,10 @@ public class InputHandler : MonoBehaviour
 
     void Zoom(InputAction.CallbackContext obj){
         controller.ZoomCamera(obj.ReadValue<float>());
+    }
+
+    void ResetCamera(InputAction.CallbackContext obj){
+        controller.ResetCamera();
     }
 
     #endregion

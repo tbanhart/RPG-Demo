@@ -57,6 +57,7 @@ public class PlayerController : MonoBehaviour {
                 CameraTarget = new GameObject();
                 currentcam.transform.SetParent(CameraTarget.transform);
                 cameraControl.CameraTarget = CameraTarget;
+                cameraControl.ResetCamera();
         }
 
         private void Update() {
@@ -164,6 +165,10 @@ public class PlayerController : MonoBehaviour {
 
         public void ZoomCamera(float offset){
                 CurrentCamZoom = offset * CamZoomVelocity;
+        }
+
+        public void ResetCamera(){
+                cameraControl.ResetCamera(this.gameObject.transform);
         }
 
         public void AddInteraction(ActionType action, GameObject target){

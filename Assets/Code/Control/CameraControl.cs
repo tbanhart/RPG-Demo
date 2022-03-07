@@ -34,7 +34,32 @@ public class CameraControl : MonoBehaviour
     }
 
     public void ResetCamera(){
-        CurrentCamera.transform.SetPositionAndRotation(ResetPosition, new Quaternion());
+        //CurrentCamera.transform.SetParent(CameraTarget.transform);// SetLocalPositionAndRotation(ResetPosition, new Quaternion());
+        CurrentCamera.transform.localPosition = Vector3.zero;
+        CurrentCamera.transform.localPosition += ResetPosition;
+        /*var localReset = new Vector3(
+            CameraTarget.transform.right.x + ResetPosition.x,
+            CameraTarget.transform.up.y + ResetPosition.y,
+            CameraTarget.transform.forward.z + ResetPosition.z
+        );
+        CurrentCamera.transform.localPosition = localReset;*/
+        //MoveCamera(CurrentCamera.transform.localPosition + ResetPosition);
+        CurrentZoom = 0f;
+        LookAtTarget();
+    }
+
+    public void ResetCamera(Transform relativeto){
+        CurrentCamera.transform.SetParent(relativeto);
+        CurrentCamera.transform.localPosition = ResetPosition;
+        CurrentCamera.transform.SetParent(CameraTarget.transform);
+        /*
+        CurrentCamera.transform.localPosition = new Vector3(
+            relativeto.right.x + ResetPosition.x,
+            relativeto.up.y + ResetPosition.y,
+            relativeto.forward.z + ResetPosition.z
+        );
+        */
+        CurrentZoom = 0f;
         LookAtTarget();
     }
 
