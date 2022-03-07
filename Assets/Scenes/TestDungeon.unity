@@ -625,14 +625,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: shortsword
       objectReference: {fileID: 0}
-    - target: {fileID: 5420457831315174427, guid: cc4ff944f1934be40a91cd75119ce406, type: 3}
-      propertyPath: ExamineText
-      value: I made this like two years ago ^.^
-      objectReference: {fileID: 0}
-    - target: {fileID: 5420457831315174427, guid: cc4ff944f1934be40a91cd75119ce406, type: 3}
-      propertyPath: DefaultRotation.x
-      value: 90
-      objectReference: {fileID: 0}
     - target: {fileID: 5527021550087817676, guid: cc4ff944f1934be40a91cd75119ce406, type: 3}
       propertyPath: m_RootOrder
       value: 1
