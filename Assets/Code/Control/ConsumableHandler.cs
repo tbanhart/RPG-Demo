@@ -16,7 +16,15 @@ public abstract class ConsumableHandler : IStateHandler
 
     public Combat combat { get; set; }
 
-    public Interaction currentInteraction { get; set; }
+    public Interaction currentInteraction { 
+        get {
+            if (_currentInteraction == null) return null;
+            else return _currentInteraction;
+        } 
+        set => _currentInteraction = value; 
+    }
+
+    Interaction _currentInteraction = null;
 
     // Used properties
     public GameObject Owner { get; set; }

@@ -43,6 +43,8 @@ public class PlayerController : MonoBehaviour {
 
         GameObject CameraTarget;
         
+        [SerializeField] GameObject LookAtTarget;
+
         #endregion
 
         #region Unity Built-ins
@@ -81,9 +83,14 @@ public class PlayerController : MonoBehaviour {
                 }
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 5)))
                         Debug.Log("Button Clicked");
+
                 // State Machine
                 handler.HandleState();
                 debugState = CurrentState;
+
+                // Set LookAt Target for Proc Animations
+                if(CurrentInteraction == null) SetLookAt(new Vector3(SelectorPosition.x, 0f, SelectorPosition.z));
+                else SetLookAt(CurrentInteraction.Target);
         }
 
         #endregion
@@ -170,6 +177,8 @@ public class PlayerController : MonoBehaviour {
         public void ResetCamera(){
                 cameraControl.ResetCamera(this.gameObject.transform);
         }
+        
+        #endregion
 
         public void AddInteraction(ActionType action, GameObject target){
                 GUIContainer.GetComponent<GUIManager>().CloseContextMenu();
@@ -177,5 +186,11 @@ public class PlayerController : MonoBehaviour {
                 handler.SetState(action);
         }
 
-        #endregion
+        public void SetLookAt(GameObject obj){
+                LookAtTarget.transform.position = obj.transform.position;
+        }
+
+        public void SetLookAt(Vector3 target){
+                LookAtTarget.transform.position = target;
+        }
 }
