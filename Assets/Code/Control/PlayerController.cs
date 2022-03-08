@@ -177,6 +177,10 @@ public class PlayerController : MonoBehaviour {
         public void ResetCamera(){
                 cameraControl.ResetCamera(this.gameObject.transform);
         }
+
+        public void Exit(){
+                Application.Quit();
+        }
         
         #endregion
 
