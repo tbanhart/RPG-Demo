@@ -6,5 +6,8 @@ public enum ActionType{
     Examine,
     Attack,
     Walk,
-    Grab
+    Grab,
+    Store,
+    Open,
+    Default
 }

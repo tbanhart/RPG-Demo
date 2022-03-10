@@ -11,11 +11,14 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] State debugState;
 
+        GUIManager guiManager;
+
         CameraControl cameraControl;
 
         PlayerHandler handler;
 
         Inventory inventory;
+
 
         #endregion
 
@@ -60,6 +63,7 @@ public class PlayerController : MonoBehaviour {
                 currentcam.transform.SetParent(CameraTarget.transform);
                 cameraControl.CameraTarget = CameraTarget;
                 cameraControl.ResetCamera();
+                guiManager = GUIContainer.GetComponent<GUIManager>();
         }
 
         private void Update() {
@@ -100,7 +104,7 @@ public class PlayerController : MonoBehaviour {
         public void HandleSelect(){
                 // Make the UI mask input
                 if(EventSystem.current.IsPointerOverGameObject()) return;
-
+                
                 // If a gui option isn't being selected, close the manager window
                 var guiman = GUIContainer.GetComponent<GUIManager>();
                 guiman.CloseMenus();
@@ -143,7 +147,7 @@ public class PlayerController : MonoBehaviour {
         }
 
         public void Drop(){
-                // *** These could be convinced into one execution ***
+                // *** These could be consolidated into one execution ***
                 // *** These should also be moved to inventory maybe? ***
                 if(inventory.HasItemInHand()){
                         var handobj = inventory.Hand1;
@@ -196,5 +200,18 @@ public class PlayerController : MonoBehaviour {
 
         public void SetLookAt(Vector3 target){
                 LookAtTarget.transform.position = target;
+        }
+
+        public bool TryGrabItem(GameObject item){
+                if(inventory.HasItemInHand()){ Debug.Log(inventory.Hand1); return false;}
+                Debug.Log("Grabbing item");
+                item.GetComponent<MeshRenderer>().enabled = true;
+                handler.SetState(ActionType.Grab);
+                handler.currentInteraction = new Interaction(
+                        ActionType.Grab,
+                        item
+                );
+                guiManager.RemoveItem(item);
+                return true;
         }
 }

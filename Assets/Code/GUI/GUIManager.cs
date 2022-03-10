@@ -14,6 +14,17 @@ public class GUIManager : MonoBehaviour
 
     ExamineText examineText;
 
+    [SerializeField] GameObject inventoryPanel;
+
+
+    [SerializeField] GameObject IconTemplate;
+
+    List<GameObject> inventoryIcons;
+
+    GameObject MenuTarget;
+
+    [SerializeField] GameObject Player;
+
     #endregion
 
     #region Unity Functions
@@ -22,6 +33,11 @@ public class GUIManager : MonoBehaviour
         contextMenu = GetComponent<ContextMenu>();
         examineText = GetComponent<ExamineText>();
         CloseMenus();
+
+        inventoryIcons = new List<GameObject>();
+    }
+
+    private void Update() {
     }
 
     #endregion
@@ -32,6 +48,7 @@ public class GUIManager : MonoBehaviour
     {
         CloseContextMenu();
         CloseExamineText();
+        CloseContainerInventory();
     }
 
     #endregion
@@ -45,7 +62,7 @@ public class GUIManager : MonoBehaviour
         contextMenuPanel.GetComponent<RectTransform>().position = point;
         contextMenu.Target = obj;
         foreach(var action in obj.GetComponent<Interactable>().AvailableActions){
-            contextMenu.AddAction(player, action);
+            contextMenu.AddAction(Player, action);
         }
     }
 
@@ -70,6 +87,48 @@ public class GUIManager : MonoBehaviour
         if(examineTextPanel.activeSelf == true){
             examineTextPanel.SetActive(false);
         }
+    }
+
+    #endregion
+
+    #region Container Inventory
+
+    public void ShowContainerInventory(GameObject target){
+        inventoryPanel.SetActive(true);
+        MenuTarget = target;
+        ContainerRefresh();
+    }   
+
+    public void CloseContainerInventory(){
+        inventoryPanel.SetActive(false);
+    }
+
+    public void ContainerRefresh(){
+        ClearInventoryIcons();
+
+        foreach(var item in MenuTarget.GetComponent<Container>().StoredItems){
+            AddInventoryIcon(item, item.GetComponent<Interactable>().Image);
+        }
+    }
+
+    void AddInventoryIcon(GameObject item, Sprite image){
+        var icon = Instantiate(IconTemplate);
+        icon.transform.SetParent(inventoryPanel.transform);
+        icon.GetComponent<InventoryIcon>().SetupButton(Player, image, item);
+        inventoryIcons.Add(icon);
+    }
+
+    void ClearInventoryIcons(){
+        foreach(var item in inventoryIcons){
+            Debug.Log("Destroying" + item);
+            Destroy(item);
+        } 
+        inventoryIcons.Clear();
+    }
+
+    public void RemoveItem(GameObject item){
+        MenuTarget.GetComponent<Container>().StoredItems.Remove(item);
+        ContainerRefresh();
     }
 
     #endregion

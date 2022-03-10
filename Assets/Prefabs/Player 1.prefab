@@ -763,6 +763,7 @@ MonoBehaviour:
   HoveredObject: {fileID: 0}
   CamRotateVelocity: 120
   CamZoomVelocity: 5
+  LookAtTarget: {fileID: 0}
 --- !u!114 &669970646
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2385,6 +2386,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2038180852718184441}
     m_Modifications:
+    - target: {fileID: 104904248304017343, guid: f8bae69e3e62cd947b02c1659de6e79a, type: 3}
+      propertyPath: Player
+      value: 
+      objectReference: {fileID: 1402545516013387711}
     - target: {fileID: 862011196476629905, guid: f8bae69e3e62cd947b02c1659de6e79a, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
@@ -2499,6 +2504,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3193478099457852442, guid: f8bae69e3e62cd947b02c1659de6e79a, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734196829725660745, guid: f8bae69e3e62cd947b02c1659de6e79a, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6734196829725660745, guid: f8bae69e3e62cd947b02c1659de6e79a, type: 3}
+      propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8964578936516189382, guid: f8bae69e3e62cd947b02c1659de6e79a, type: 3}

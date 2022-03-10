@@ -153,6 +153,10 @@ public abstract class ConsumableHandler : IStateHandler
         DoInteraction();
     }
 
+    public void HandleInventory(){
+        
+    }
+
     #endregion
 
     #region State Setters
@@ -175,6 +179,10 @@ public abstract class ConsumableHandler : IStateHandler
                 animator.SetMovement(Vector3.zero);
                 combat.StartAttack();
                 break;
+
+            case State.INVENTORY:
+                animator.SetMovement(Vector3.zero);
+                break;
         }
     }
 
@@ -187,6 +195,8 @@ public abstract class ConsumableHandler : IStateHandler
                 break;
             case ActionType.Examine:
             case ActionType.Grab:
+            case ActionType.Open:
+            case ActionType.Store:
                 SetState(State.INTERACTING);
                 break;
             default:
@@ -229,6 +239,29 @@ public abstract class ConsumableHandler : IStateHandler
                     var point = currentInteraction.Target.transform.position;
                     guiContainer.GetComponent<GUIManager>().ShowExamineText(maincam.WorldToScreenPoint(point), text);
                 }
+                CompleteInteraction();
+                break;
+
+            case ActionType.Store:
+                if(!inventory.HasItemInHand()) break;
+                var item = inventory.Hand1;
+                bool itemstored;
+                itemstored = 
+                    currentInteraction.Target.GetComponent<Container>().
+                        StoreItem(item);
+                if(itemstored == true){
+                    item.transform.SetParent(currentInteraction.Target.transform);
+                    item.layer = 2;
+                    item.GetComponent<MeshRenderer>().enabled = false;
+                    inventory.Clear(item);
+                    UpdateInventoryPositions();
+                }
+                CompleteInteraction();
+                break;
+
+            case ActionType.Open:
+                guiContainer.GetComponent<GUIManager>().ShowContainerInventory(currentInteraction.Target);
+                SetState(State.INVENTORY);
                 CompleteInteraction();
                 break;
 

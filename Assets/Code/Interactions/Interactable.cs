@@ -17,7 +17,9 @@ public class Interactable : MonoBehaviour
     [HideInInspector] public Vector3 EquipOffsetRot;
     #endregion
     [SerializeField] public float Weight;
+    [SerializeField] public float Size;
     [SerializeField] public string ExamineText;
+    [SerializeField] public Sprite Image;
 
     private void Awake() {
         if(ExamineText == null) ExamineText = string.Empty;

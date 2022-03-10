@@ -12,5 +12,7 @@ public enum State{
     // For executing an interaction
     INTERACTING,
     // Picking up an item
-    GRAB
+    GRAB,
+    // Viewing an items inventory
+    INVENTORY
     }
