@@ -99,6 +99,11 @@ public abstract class ConsumableHandler : IStateHandler
     public void HandleAttack(){
         var stage = combat.attackStage;
 
+        // *** Adding this in until Combat is reintroduced ***
+        Debug.Log("Attacking target");
+        SetState(State.IDLE);
+        return;
+
         // Stage: Starting attack
         if(stage == AttackStage.START){
             // Check attack range
@@ -274,6 +279,12 @@ public abstract class ConsumableHandler : IStateHandler
     // *** This needs to be moved to the inventory component ***
     public void UpdateInventoryPositions()
     {
+        var guiman = guiContainer.GetComponent<GUIManager>();
+
+        // Clear the UI slots before updating them
+        guiman.ClearPlayerInventory();
+
+        // *** There should be a method that can be looped thru for this ***
         if (inventory.HasItemInHand() == true)
         {
             var invhand = inventory.Hand1;
@@ -283,6 +294,7 @@ public abstract class ConsumableHandler : IStateHandler
             invhand.transform.localPosition = invinter.HandOffsetPos;
             invhand.transform.localRotation = new Quaternion();
             invhand.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+            guiman.SetSlotIcon(InventorySlot.HAND1, invinter.Image);
         }
         if (inventory.HasItemEquipped() == true)
         {
@@ -293,6 +305,8 @@ public abstract class ConsumableHandler : IStateHandler
             invequip.transform.localPosition = invinter.EquipOffsetPos;
             invequip.transform.localRotation = new Quaternion();
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+            guiman.SetSlotIcon(InventorySlot.EQUIP1, invinter.Image);
+
         }
         if (inventory.HasEquipment() == true){
             var invequip = inventory.Equip2;
@@ -302,6 +316,7 @@ public abstract class ConsumableHandler : IStateHandler
             invequip.transform.localPosition = invinter.EquipOffsetPos;
             invequip.transform.localRotation = new Quaternion();
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
+            guiman.SetSlotIcon(InventorySlot.EQUIP2, invinter.Image);
         }
     }
 

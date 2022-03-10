@@ -76,6 +76,30 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "AMWalk",
+                    "type": "Button",
+                    "id": "750c55d2-c9df-4d8a-b006-3eb7bedb4b5a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "AMAttack",
+                    "type": "Button",
+                    "id": "dc9ec315-d8f4-43ab-9947-527595a6dc4f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "AMExamine",
+                    "type": "Button",
+                    "id": "7c7197e5-0fbd-40aa-927b-e82d6ebf825d",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -219,6 +243,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "Exit",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2de030cb-6aab-4e07-afed-6c5d478e7eaa",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AMWalk",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b961b9b1-eea1-48c6-a70b-015b1df7da5d",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AMAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c2ae874a-956a-4008-95d9-fcf28626ab73",
+                    "path": "<Keyboard>/c",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "AMExamine",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

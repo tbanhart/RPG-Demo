@@ -1,29 +1,71 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GUIManager : MonoBehaviour
 {
     #region Reference Objects
 
+    #region Context Menu
+
     [SerializeField] GameObject contextMenuPanel;
 
     ContextMenu contextMenu;
+
+    #endregion
+
+    #region Examine Text
 
     [SerializeField] GameObject examineTextPanel;
 
     ExamineText examineText;
 
-    [SerializeField] GameObject inventoryPanel;
+    #endregion
+
+    #region Container Inventory
+
+    [SerializeField] GameObject containerPanel;
 
 
     [SerializeField] GameObject IconTemplate;
 
-    List<GameObject> inventoryIcons;
+    List<GameObject> containerInventory;
+
+    #endregion
+
+    #region Player Inventory
+
+    [SerializeField] GameObject InventoryPanel;
+
+    [SerializeField] GameObject HandsIcon;
+
+    [SerializeField] GameObject SheatheIcon;
+
+    [SerializeField] GameObject EquipmentIcon;
+
+    [SerializeField] Sprite DefaultIcon;
+ 
+    #endregion
+
+    #region Window Agnostic
 
     GameObject MenuTarget;
 
     [SerializeField] GameObject Player;
+
+    [SerializeField] Texture2D IconExamine;
+    [SerializeField] Texture2D IconAttack;
+    [SerializeField] Texture2D IconMove;
+    [SerializeField] Texture2D IconGrab;
+    [SerializeField] Texture2D IconStore;
+    [SerializeField] Texture2D IconOpen;
+
+    List<Texture2D> ActionIcons;
+
+    int CursorSprite;
+
+    #endregion
 
     #endregion
 
@@ -34,7 +76,17 @@ public class GUIManager : MonoBehaviour
         examineText = GetComponent<ExamineText>();
         CloseMenus();
 
-        inventoryIcons = new List<GameObject>();
+        containerInventory = new List<GameObject>();
+        ClearPlayerInventory();
+
+
+        ActionIcons = new List<Texture2D>();
+        ActionIcons.Insert((int)ActionType.Examine, IconExamine);
+        ActionIcons.Insert((int)ActionType.Attack, IconAttack);
+        ActionIcons.Insert((int)ActionType.Walk, IconMove);
+        ActionIcons.Insert((int)ActionType.Grab, IconGrab);
+        ActionIcons.Insert((int)ActionType.Store, IconStore);
+        ActionIcons.Insert((int)ActionType.Open, IconOpen);
     }
 
     private void Update() {
@@ -49,6 +101,14 @@ public class GUIManager : MonoBehaviour
         CloseContextMenu();
         CloseExamineText();
         CloseContainerInventory();
+    }
+
+    public void SetCursorSprite(ActionType action){
+        if(action == ActionType.Default) return;
+        if(ActionIcons[(int)action] == null)
+            Cursor.SetCursor(null, new Vector2(0f,0f), CursorMode.ForceSoftware);
+        else
+            Cursor.SetCursor(ActionIcons[(int)action], new Vector2(ActionIcons[(int)action].width/2, ActionIcons[(int)action].height/2), CursorMode.Auto);
     }
 
     #endregion
@@ -94,13 +154,13 @@ public class GUIManager : MonoBehaviour
     #region Container Inventory
 
     public void ShowContainerInventory(GameObject target){
-        inventoryPanel.SetActive(true);
+        containerPanel.SetActive(true);
         MenuTarget = target;
         ContainerRefresh();
     }   
 
     public void CloseContainerInventory(){
-        inventoryPanel.SetActive(false);
+        containerPanel.SetActive(false);
     }
 
     public void ContainerRefresh(){
@@ -113,22 +173,62 @@ public class GUIManager : MonoBehaviour
 
     void AddInventoryIcon(GameObject item, Sprite image){
         var icon = Instantiate(IconTemplate);
-        icon.transform.SetParent(inventoryPanel.transform);
+        icon.transform.SetParent(containerPanel.transform);
         icon.GetComponent<InventoryIcon>().SetupButton(Player, image, item);
-        inventoryIcons.Add(icon);
+        containerInventory.Add(icon);
     }
 
     void ClearInventoryIcons(){
-        foreach(var item in inventoryIcons){
+        foreach(var item in containerInventory){
             Debug.Log("Destroying" + item);
             Destroy(item);
         } 
-        inventoryIcons.Clear();
+        containerInventory.Clear();
     }
 
     public void RemoveItem(GameObject item){
         MenuTarget.GetComponent<Container>().StoredItems.Remove(item);
         ContainerRefresh();
+    }
+
+    #endregion
+
+    #region 
+
+    public void SetSlotIcon(InventorySlot slot, Sprite icon){
+        GameObject invicon;
+        
+        // *** Maybe a property for the sprites of the slot objects? ***
+        switch(slot){
+            case InventorySlot.HAND1:
+                HandsIcon.GetComponent<Image>().sprite = icon;
+                invicon = HandsIcon;
+                break;
+
+            case InventorySlot.EQUIP1:
+                invicon = SheatheIcon;
+                break;
+
+            case InventorySlot.EQUIP2:
+                invicon = EquipmentIcon;
+                break;
+
+            default:
+                invicon = HandsIcon;
+                break;
+        }
+
+        invicon.GetComponent<Image>().sprite = icon;
+    }
+
+    #endregion
+
+    #region Player Inventory
+
+    public void ClearPlayerInventory(){
+        HandsIcon.GetComponent<Image>().sprite = DefaultIcon;
+        SheatheIcon.GetComponent<Image>().sprite = DefaultIcon;
+        EquipmentIcon.GetComponent<Image>().sprite = DefaultIcon;
     }
 
     #endregion

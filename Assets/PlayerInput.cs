@@ -89,6 +89,30 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""AMWalk"",
+                    ""type"": ""Button"",
+                    ""id"": ""750c55d2-c9df-4d8a-b006-3eb7bedb4b5a"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""AMAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""dc9ec315-d8f4-43ab-9947-527595a6dc4f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""AMExamine"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c7197e5-0fbd-40aa-927b-e82d6ebf825d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -232,6 +256,39 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Exit"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2de030cb-6aab-4e07-afed-6c5d478e7eaa"",
+                    ""path"": ""<Keyboard>/z"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AMWalk"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b961b9b1-eea1-48c6-a70b-015b1df7da5d"",
+                    ""path"": ""<Keyboard>/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AMAttack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c2ae874a-956a-4008-95d9-fcf28626ab73"",
+                    ""path"": ""<Keyboard>/c"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AMExamine"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -818,6 +875,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         m_Player_ZoomCamera = m_Player.FindAction("ZoomCamera", throwIfNotFound: true);
         m_Player_ResetCamera = m_Player.FindAction("ResetCamera", throwIfNotFound: true);
         m_Player_Exit = m_Player.FindAction("Exit", throwIfNotFound: true);
+        m_Player_AMWalk = m_Player.FindAction("AMWalk", throwIfNotFound: true);
+        m_Player_AMAttack = m_Player.FindAction("AMAttack", throwIfNotFound: true);
+        m_Player_AMExamine = m_Player.FindAction("AMExamine", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -888,6 +948,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
     private readonly InputAction m_Player_ZoomCamera;
     private readonly InputAction m_Player_ResetCamera;
     private readonly InputAction m_Player_Exit;
+    private readonly InputAction m_Player_AMWalk;
+    private readonly InputAction m_Player_AMAttack;
+    private readonly InputAction m_Player_AMExamine;
     public struct PlayerActions
     {
         private @PlayerInput m_Wrapper;
@@ -901,6 +964,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         public InputAction @ZoomCamera => m_Wrapper.m_Player_ZoomCamera;
         public InputAction @ResetCamera => m_Wrapper.m_Player_ResetCamera;
         public InputAction @Exit => m_Wrapper.m_Player_Exit;
+        public InputAction @AMWalk => m_Wrapper.m_Player_AMWalk;
+        public InputAction @AMAttack => m_Wrapper.m_Player_AMAttack;
+        public InputAction @AMExamine => m_Wrapper.m_Player_AMExamine;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -937,6 +1003,15 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Exit.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnExit;
                 @Exit.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnExit;
                 @Exit.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnExit;
+                @AMWalk.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMWalk;
+                @AMWalk.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMWalk;
+                @AMWalk.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMWalk;
+                @AMAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMAttack;
+                @AMAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMAttack;
+                @AMAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMAttack;
+                @AMExamine.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMExamine;
+                @AMExamine.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMExamine;
+                @AMExamine.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnAMExamine;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -968,6 +1043,15 @@ public class @PlayerInput : IInputActionCollection, IDisposable
                 @Exit.started += instance.OnExit;
                 @Exit.performed += instance.OnExit;
                 @Exit.canceled += instance.OnExit;
+                @AMWalk.started += instance.OnAMWalk;
+                @AMWalk.performed += instance.OnAMWalk;
+                @AMWalk.canceled += instance.OnAMWalk;
+                @AMAttack.started += instance.OnAMAttack;
+                @AMAttack.performed += instance.OnAMAttack;
+                @AMAttack.canceled += instance.OnAMAttack;
+                @AMExamine.started += instance.OnAMExamine;
+                @AMExamine.performed += instance.OnAMExamine;
+                @AMExamine.canceled += instance.OnAMExamine;
             }
         }
     }
@@ -1133,6 +1217,9 @@ public class @PlayerInput : IInputActionCollection, IDisposable
         void OnZoomCamera(InputAction.CallbackContext context);
         void OnResetCamera(InputAction.CallbackContext context);
         void OnExit(InputAction.CallbackContext context);
+        void OnAMWalk(InputAction.CallbackContext context);
+        void OnAMAttack(InputAction.CallbackContext context);
+        void OnAMExamine(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

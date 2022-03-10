@@ -25,7 +25,9 @@ public class InputHandler : MonoBehaviour
     InputAction zoomCamera;
     InputAction resetCamera;
     InputAction exit;
-
+    InputAction amWalk;
+    InputAction amAttack;
+    InputAction amExamine;
     #endregion
 
     #region Input System Wiring - EACH NEW INPUT NEEDS TO BE DECLARED HERE
@@ -104,7 +106,24 @@ public class InputHandler : MonoBehaviour
         inputActions.Player.Exit.canceled += Exit;
         inputActions.Player.Exit.Enable();
 
+        //ActionMasks
+        amAttack = inputActions.Player.AMAttack;
+        amAttack.Enable();
 
+        inputActions.Player.AMAttack.performed += ApplyActionMask;
+        inputActions.Player.AMAttack.Enable();
+
+        amWalk = inputActions.Player.AMWalk;
+        amWalk.Enable();
+
+        inputActions.Player.AMWalk.performed += ApplyActionMask;
+        inputActions.Player.AMWalk.Enable();
+
+        amExamine = inputActions.Player.AMExamine;
+        amExamine.Enable();
+
+        inputActions.Player.AMExamine.performed += ApplyActionMask;
+        inputActions.Player.AMExamine.Enable();
     }
 
     private void OnDisable() {
@@ -146,6 +165,30 @@ public class InputHandler : MonoBehaviour
 
     void Exit(InputAction.CallbackContext obj){
         controller.Exit();
+    }
+
+    void ApplyActionMask(InputAction.CallbackContext obj){
+        ActionType action;
+        
+        switch(obj.action.name){
+            case "AMAttack":
+                action = ActionType.Attack;
+                break;
+
+            case "AMWalk":
+                action = ActionType.Walk;
+                break;
+
+            case "AMExamine":
+                action = ActionType.Examine;
+                break;
+            
+            default:
+                action = ActionType.Default;
+                break;
+        }
+
+        controller.SetActionMask(action);
     }
 
     #endregion

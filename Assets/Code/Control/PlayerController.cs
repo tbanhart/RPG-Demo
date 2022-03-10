@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
 
         Inventory inventory;
 
+        ActionType maskedAction;
 
         #endregion
 
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour {
                 cameraControl.CameraTarget = CameraTarget;
                 cameraControl.ResetCamera();
                 guiManager = GUIContainer.GetComponent<GUIManager>();
+                ClearActionMask();                
         }
 
         private void Update() {
@@ -95,6 +97,8 @@ public class PlayerController : MonoBehaviour {
                 // Set LookAt Target for Proc Animations
                 if(CurrentInteraction == null) SetLookAt(new Vector3(SelectorPosition.x, 0f, SelectorPosition.z));
                 else SetLookAt(CurrentInteraction.Target);
+
+                UpdateCursorSprite();
         }
 
         #endregion
@@ -110,8 +114,15 @@ public class PlayerController : MonoBehaviour {
                 guiman.CloseMenus();
 
                 // If an interactable is at the cursor, do its default interaction
-                if(HoveredObject != null && HoveredObject.GetComponent<Interactable>() != null){
-                        var action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
+                if(maskedAction != ActionType.Walk &&
+                   HoveredObject != null && HoveredObject.GetComponent<Interactable>() != null){
+                        ActionType action;
+                        if(maskedAction != ActionType.Default){
+                                Debug.Log(maskedAction);
+                                action = maskedAction;
+                        }
+                        else
+                                action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
                         CurrentInteraction = new Interaction(
                                 action, 
                                 HoveredObject,
@@ -123,6 +134,8 @@ public class PlayerController : MonoBehaviour {
                         handler.SetState(State.MOVING);
                         CurrentInteraction = null;
                 }
+
+                ClearActionMask();
         }
 
         public void HandleOpenContext(){
@@ -158,7 +171,7 @@ public class PlayerController : MonoBehaviour {
                         handobj.transform.rotation = new Quaternion();
                         handobj.transform.localRotation = Quaternion.Euler(startingrot.x, startingrot.y, startingrot.z);
                         handobj.layer = 6;
-                } else if(inventory.HasItemEquipped()){
+                } else if(inventory.HasItemEquipped() || inventory.HasEquipment()){
                         var obj = inventory.Equip2;
                         var startingrot = obj.GetComponent<Interactable>().DefaultRotation;
                         inventory.Clear(obj);
@@ -168,6 +181,8 @@ public class PlayerController : MonoBehaviour {
                         obj.transform.parent = null;
                         obj.layer = 6;
                 }
+                
+                handler.UpdateInventoryPositions();
         }
 
         public void RotateCamera(float offset){
@@ -184,6 +199,10 @@ public class PlayerController : MonoBehaviour {
 
         public void Exit(){
                 Application.Quit();
+        }
+
+        public void SetActionMask(ActionType actionType){
+                maskedAction = actionType;
         }
         
         #endregion
@@ -213,5 +232,21 @@ public class PlayerController : MonoBehaviour {
                 );
                 guiManager.RemoveItem(item);
                 return true;
+        }
+
+        void ClearActionMask(){
+                maskedAction = ActionType.Default;
+        }
+
+        void UpdateCursorSprite(){
+                ActionType action;
+                if(maskedAction != ActionType.Default) action = maskedAction;
+                else{
+                        if(HoveredObject.GetComponent<Interactable>() == null) action = ActionType.Walk;
+                        else {
+                                action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
+                        }
+                }
+                guiManager.SetCursorSprite(action);
         }
 }
