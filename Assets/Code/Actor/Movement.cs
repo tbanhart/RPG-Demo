@@ -53,6 +53,11 @@ public class Movement : MonoBehaviour
         agent.speed = speed;
     }
 
+    public void SetSpeedMultiplier(float magnitude){
+        agent.speed = MoveSpeed * magnitude;
+        Debug.Log(MoveSpeed * magnitude);
+    }
+
     public Vector3 GetVelocity()
     {
         /*

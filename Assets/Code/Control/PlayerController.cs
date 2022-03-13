@@ -9,8 +9,6 @@ public class PlayerController : MonoBehaviour {
 
         [SerializeField] GameObject GUIContainer;
 
-        [SerializeField] State debugState;
-
         GUIManager guiManager;
 
         CameraControl cameraControl;
@@ -18,8 +16,6 @@ public class PlayerController : MonoBehaviour {
         PlayerHandler handler;
 
         Inventory inventory;
-
-        ActionType maskedAction;
 
         #endregion
 
@@ -46,14 +42,30 @@ public class PlayerController : MonoBehaviour {
         float CurrentCamZoom = 0f;
 
         GameObject CameraTarget;
-        
+
         [SerializeField] GameObject LookAtTarget;
+
+        ActionType maskedAction;
+
+        Encumberance encumberance {get => handler.encumberance; set => handler.encumberance = value;}
+
+        CarryState carryState {get => handler.carryState; set => handler.carryState = value;}
+
+        [SerializeField] float CarryOneHand;
+
+        [SerializeField] float MaxCarryWeight;
+
+        [SerializeField] State debugState;
+
+        [SerializeField] Encumberance debugEncumberance;
+
+        [SerializeField] CarryState debugCarryState;
 
         #endregion
 
         #region Unity Built-ins
 
-        private void Awake() {
+         private void Awake() {
                 handler = new PlayerHandler(this.gameObject, currentcam, GUIContainer);
 
                 CurrentState = State.IDLE;
@@ -65,7 +77,10 @@ public class PlayerController : MonoBehaviour {
                 cameraControl.CameraTarget = CameraTarget;
                 cameraControl.ResetCamera();
                 guiManager = GUIContainer.GetComponent<GUIManager>();
-                ClearActionMask();                
+                handler.CarryOneHand = CarryOneHand;
+                handler.MaxCarryWeight = MaxCarryWeight;
+                ClearActionMask();   
+                UpdateCarryWeights();             
         }
 
         private void Update() {
@@ -92,13 +107,17 @@ public class PlayerController : MonoBehaviour {
 
                 // State Machine
                 handler.HandleState();
-                debugState = CurrentState;
 
                 // Set LookAt Target for Proc Animations
                 if(CurrentInteraction == null) SetLookAt(new Vector3(SelectorPosition.x, 0f, SelectorPosition.z));
                 else SetLookAt(CurrentInteraction.Target);
 
                 UpdateCursorSprite();
+
+
+                debugState = CurrentState;
+                debugEncumberance = encumberance;
+                debugCarryState = carryState;
         }
 
         #endregion
@@ -248,5 +267,20 @@ public class PlayerController : MonoBehaviour {
                         }
                 }
                 guiManager.SetCursorSprite(action);
+        }
+
+        void UpdateCarryWeights(){
+                var weight = inventory.CurrentWeight;
+                var inhand = inventory.CarriedWeight;
+                
+                // *** A Loop here would be really clever ***
+                if(inhand <= CarryOneHand) carryState = CarryState.OneHand;
+                else if (inhand <= CarryOneHand * 2) carryState = CarryState.TwoHand;
+                else carryState = CarryState.Drag;
+        
+                if(weight <= MaxCarryWeight/2) encumberance = Encumberance.Light;
+                else if(weight <= MaxCarryWeight) encumberance = Encumberance.Medium;
+                else if (weight <= MaxCarryWeight * 1.5) encumberance = Encumberance.Heavy;
+                else encumberance = Encumberance.OverEncumber;
         }
 }

@@ -37,4 +37,8 @@ public class ActorAnimator : MonoBehaviour
         animator.SetBool("IsAttacking", false);
         animator.SetBool("IsMoving", false);
     }
+
+    public void SetCarryWeight(int state){
+        animator.SetFloat("CarryState", state);
+    }
 }

@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Inventory : MonoBehaviour
 {
-
-
     //public GameObject Hand1 {get => Items[(int)InventorySlot.HAND1].GetItem();}
     //public GameObject Equip1 { get => Items[(int)InventorySlot.EQUIP1].GetItem();}
 
@@ -42,6 +40,13 @@ public class Inventory : MonoBehaviour
         set => _slotData[InventorySlot.WAIST].Item = value;
     }
 
+    public float CurrentWeight {get => RecalculateWeight();}
+
+    public float CarriedWeight {get {
+        if(HasItemInHand()) return _hand1.Weight;
+        else return 0f;
+        }}
+
     #endregion
 
     private void Awake() {
@@ -59,6 +64,8 @@ public class Inventory : MonoBehaviour
         _equip1 = null;
         _equip2 = null;
         _waist = null;
+
+        //CurrentWeight = RecalculateWeight();
     }
 
     public bool CanPickup(GameObject obj){
@@ -100,6 +107,8 @@ public class Inventory : MonoBehaviour
                 return false;
             }
         }
+
+        //CurrentWeight = RecalculateWeight();
 
         return false;
     }
@@ -174,6 +183,7 @@ public class Inventory : MonoBehaviour
         if(_equip1 != null && Equip1 == obj) _equip1 = null;
         if(_equip2 != null && Equip2 == obj) _equip2 = null;
         if(_waist != null && Waist == obj) _waist = null;
+        //CurrentWeight = RecalculateWeight();
     }
 
     // *** This should just be replaced by checking all thru an array or smth***
@@ -203,6 +213,17 @@ public class Inventory : MonoBehaviour
         if(_slotData[slot].HasItem() == false) return null;
         else return _slotData[slot].Item;
     }
+
+    float RecalculateWeight()
+    {
+        var weight = 0f;
+
+        if(HasItemInHand()) weight += _hand1.Weight;
+        if(HasItemEquipped()) weight += _equip1.Weight;
+        if(HasEquipment()) weight += _equip2.Weight;
+
+        return weight;
+    }
 }
 
 public class SlotData{
@@ -230,7 +251,7 @@ public class InventoryItem
 
     public bool Equipment;
 
-    float Weight;
+    public float Weight;
 
     public InventoryItem(GameObject item){
         Item = item;

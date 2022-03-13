@@ -41,6 +41,14 @@ public abstract class ConsumableHandler : IStateHandler
 
     public GameObject guiContainer { get; set; }
 
+    public CarryState carryState {get; set;}
+
+    public Encumberance encumberance {get; set;}
+
+    public float CarryOneHand;
+
+    public float MaxCarryWeight;
+
     #endregion
 
     public ConsumableHandler(GameObject owner, Camera cam, GameObject gui){
@@ -318,6 +326,43 @@ public abstract class ConsumableHandler : IStateHandler
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
             guiman.SetSlotIcon(InventorySlot.EQUIP2, invinter.Image);
         }
+
+        UpdateCarryWeights();
+    }
+
+    public void UpdateCarryWeights(){
+        var weight = inventory.CurrentWeight;
+        var inhand = inventory.CarriedWeight;
+
+        // *** A Loop here would be really clever ***
+        if (inhand <= CarryOneHand) carryState = CarryState.OneHand;
+        else if (inhand <= CarryOneHand * 2) carryState = CarryState.TwoHand;
+        else carryState = CarryState.Drag;
+
+        if (weight <= MaxCarryWeight / 2) encumberance = Encumberance.Light;
+        else if (weight <= MaxCarryWeight) encumberance = Encumberance.Medium;
+        else if (weight <= MaxCarryWeight * 1.5) encumberance = Encumberance.Heavy;
+        else encumberance = Encumberance.OverEncumber;
+
+        switch(carryState){
+            case CarryState.OneHand:
+                movement.SetSpeedMultiplier(1);
+                break;
+
+            case CarryState.TwoHand:
+                movement.SetSpeedMultiplier(1);
+                break;
+
+            case CarryState.Drag:
+                Debug.Log(carryState);
+                movement.SetSpeedMultiplier(.5f);
+                break;
+            
+            default:
+                movement.SetSpeedMultiplier(1);
+                break;
+        }
+        animator.SetCarryWeight((int)carryState);
     }
 
     public void CompleteInteraction(){

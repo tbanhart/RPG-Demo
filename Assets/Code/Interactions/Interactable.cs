@@ -21,8 +21,17 @@ public class Interactable : MonoBehaviour
     [SerializeField] public string ExamineText;
     [SerializeField] public Sprite Image;
 
+    [SerializeField] public bool IsContainer;
+
+    Container container;
+
     private void Awake() {
         if(ExamineText == null) ExamineText = string.Empty;
+        if(IsContainer == true) container = GetComponent<Container>();
+    }
+
+    private void Update() {
+        if(IsContainer) Weight = container.CurrentWeight;
     }
 
     public Interaction GetInteraction(ActionType action){
