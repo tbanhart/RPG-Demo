@@ -1,286 +1,187 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour {
+// Holds the logic for passing information into the Actor Controller for a player
+public class PlayerController : MonoBehaviour
+{
+        #region Field Declarations
 
-        #region Component Reference Properties
-
-        [SerializeField] Camera currentcam;
-
-        [SerializeField] GameObject GUIContainer;
-
-        GUIManager guiManager;
-
-        CameraControl cameraControl;
-
-        PlayerHandler handler;
-
-        Inventory inventory;
-
-        #endregion
-
-        #region Properties
-
-        [SerializeField] public State CurrentState {get => handler.currentState; set => handler.SetState(value);}
-
-        // This is the cursor's current position on the screen, will mostly move in k+m only!
-        [SerializeField] public Vector2 CursorPosition;
-
-        // Be pretty nice if this was a component eventually wunnit?
-        [SerializeField] public Vector3 SelectorPosition {get => handler.selectorPosition; set => handler.selectorPosition = value;}
+        #region Input fields
 
         public GameObject HoveredObject;
 
-        public Interaction CurrentInteraction {get => handler.currentInteraction; set => handler.currentInteraction = value;}
+        Vector3 SelectorPosition;
+
+        public Vector2 CursorPosition;
+
+        public InputType CurrentInput;
+
+        #endregion
+
+        #region Camera fields
+
+        // *** Move to CameraControl ***
+        GameObject cameraTarget;
 
         [SerializeField] float CamRotateVelocity;
-
         [SerializeField] float CamZoomVelocity;
 
         float CurrentCamRotate = 0f;
-
         float CurrentCamZoom = 0f;
-
-        GameObject CameraTarget;
-
         [SerializeField] GameObject LookAtTarget;
+        // ***
+        [SerializeField] Camera mainCam;
 
-        ActionType maskedAction;
+        CameraControl cameraControl;
 
-        Encumberance encumberance {get => handler.encumberance; set => handler.encumberance = value;}
+        public Vector3 CameraInput;
 
-        CarryState carryState {get => handler.carryState; set => handler.carryState = value;}
+        #endregion
 
-        [SerializeField] float CarryOneHand;
+        #region UI fields
 
-        [SerializeField] float MaxCarryWeight;
+        [SerializeField] GameObject guiControlObject;
 
-        [SerializeField] State debugState;
+        GUIManager guiController;
+        
+        #endregion
 
-        [SerializeField] Encumberance debugEncumberance;
+        #region Player fields
 
-        [SerializeField] CarryState debugCarryState;
+        public ActionType MaskedAction;
 
+        static ActionType defaultAction = ActionType.Default;
+
+        ActorController controller;
+
+        #endregion
+        
         #endregion
 
         #region Unity Built-ins
 
-         private void Awake() {
-                handler = new PlayerHandler(this.gameObject, currentcam, GUIContainer);
-
-                CurrentState = State.IDLE;
-                inventory = GetComponent<Inventory>(); 
-                cameraControl = GetComponent<CameraControl>();
-                CurrentInteraction = null;
-                CameraTarget = new GameObject();
-                currentcam.transform.SetParent(CameraTarget.transform);
-                cameraControl.CameraTarget = CameraTarget;
-                cameraControl.ResetCamera();
-                guiManager = GUIContainer.GetComponent<GUIManager>();
-                handler.CarryOneHand = CarryOneHand;
-                handler.MaxCarryWeight = MaxCarryWeight;
-                ClearActionMask();   
-                UpdateCarryWeights();             
+        private void Awake() {
+                cameraControl = mainCam.GetComponent<CameraControl>();
         }
 
         private void Update() {
                 // Send updates to the camera
-                CameraTarget.transform.position = transform.position;
+                // *** Needs update - most of it could be moved to CameraControl
+                cameraTarget.transform.position = transform.position;
                 cameraControl.OffsetRotation(CurrentCamRotate);
                 cameraControl.OffsetZoom(CurrentCamZoom);
+                // ***
 
                 // Get the raycast for selection purposes
-                var ray = currentcam.ScreenPointToRay(CursorPosition);
+                var ray = mainCam.ScreenPointToRay(CursorPosition);
                 RaycastHit hit;
-                if(!EventSystem.current.IsPointerOverGameObject())
-                if(Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 6 | 1 << 9))){
-                        // Probably want to put something about layer masks in here
-                        if(hit.collider == null){
+                if(!EventSystem.current.IsPointerOverGameObject()){
+                        if(Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 6 | 1 << 9))){
+                                // Probably want to put something about layer masks in here
+                                if(hit.collider == null){
+                                }
+                                else {
+                                        SelectorPosition = hit.point;
+                                        HoveredObject = hit.collider.gameObject;
+                                }
                         }
-                        else {
-                                SelectorPosition = hit.point;
-                                HoveredObject = hit.collider.gameObject;
+
+                        // Set the target position for movement related events
+                        controller.TargetPos = hit.point;
+
+                        // Set LookAt Target for Proc Animations
+                        controller.PALookAt = hit.point + new Vector3(0f, .5f, 0f);
+                }
+
+                // Update the selected action
+                var selectorAction = GetSelectorAction();
+
+                // Process Input
+                switch(CurrentInput){
+                        case InputType.Select:
+                                if(EventSystem.current.IsPointerOverGameObject()) break;
+
+                                // If not clicking a button, close the GUI Manager window
+
+                                // Add the currently selected action
+                                if(HoveredObject == null) {controller.AddAction(ActionType.Walk); break;}
+                                controller.AddInteraction(new Interaction(selectorAction, HoveredObject), true);
+
+                                guiController.CloseMenus();
+
+                        break;
+
+                        case InputType.OpenContextMenu:
+                                guiController.CloseMenus();
+                                guiController.OpenContextMenu(this.gameObject, CursorPosition, HoveredObject);
+                        break;
+
+                        case InputType.Drop:
+                                controller.DropItem();
+                        break;
+
+                        case InputType.Exit:
+                                // Needs to be handled in the client manager most likely
+                        break;
+
+                        case InputType.Sheathe:
+                                controller.SheatheWeapons();
+                        break;
+
+                        case InputType.ResetCamera:
+                                cameraControl.ResetCamera();
+                        break;
+                }
+
+                guiController.SetCursorSprite(selectorAction);
+        }
+
+        private void LateUpdate() {
+                // Update GUI
+                if(controller.CurrentState == State.INTERACTING){
+                        var interaction = controller.CurrentInteraction;
+                        switch(interaction.Type){
+                                case ActionType.Store:
+                                case ActionType.Grab:
+                                        guiController.ContainerRefresh();
+                                break;
+
+                                case ActionType.Open:
+                                        guiController.ShowContainerInventory(interaction.Target);
+                                        guiController.ContainerRefresh();
+                                break;
+
+                                case ActionType.Examine:
+                                        guiController.ShowExamineText(interaction.Target.transform.position, interaction.Target.GetComponent<Interactable>().ExamineText);
+                                break;
                         }
                 }
-                if (Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 5)))
-                        Debug.Log("Button Clicked");
+                guiController.ClearPlayerInventory();
+                guiController.SetSlotIcon()
 
-                // State Machine
-                handler.HandleState();
-
-                // Set LookAt Target for Proc Animations
-                if(CurrentInteraction == null) SetLookAt(new Vector3(SelectorPosition.x, 0f, SelectorPosition.z));
-                else SetLookAt(CurrentInteraction.Target);
-
-                UpdateCursorSprite();
-
-
-                debugState = CurrentState;
-                debugEncumberance = encumberance;
-                debugCarryState = carryState;
         }
 
         #endregion
 
-        #region Input Handlers
+        #region Camera functions
 
-        public void HandleSelect(){
-                // Make the UI mask input
-                if(EventSystem.current.IsPointerOverGameObject()) return;
-                
-                // If a gui option isn't being selected, close the manager window
-                var guiman = GUIContainer.GetComponent<GUIManager>();
-                guiman.CloseMenus();
 
-                // If an interactable is at the cursor, do its default interaction
-                if(maskedAction != ActionType.Walk &&
-                   HoveredObject != null && HoveredObject.GetComponent<Interactable>() != null){
-                        ActionType action;
-                        if(maskedAction != ActionType.Default){
-                                Debug.Log(maskedAction);
-                                action = maskedAction;
-                        }
-                        else
-                                action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
-                        CurrentInteraction = new Interaction(
-                                action, 
-                                HoveredObject,
-                                3f);
-                }
-                // Other wise move to the selected point
-                else{
-                        // Start moving to the selected point
-                        handler.SetState(State.MOVING);
-                        CurrentInteraction = null;
-                }
 
-                ClearActionMask();
-        }
-
-        public void HandleOpenContext(){
-                if (EventSystem.current.IsPointerOverGameObject())
-                        return;
-
-                // If a gui option isn't being selected, close the manager window
-                var guiman = GUIContainer.GetComponent<GUIManager>();
-                guiman.CloseMenus();
-
-                // If an interactable is being selected, open the context menu
-                if (HoveredObject.GetComponent<Interactable>() != null)
-                {
-                        guiman.OpenContextMenu(this.gameObject, CursorPosition, HoveredObject);
-                }
-        }
-
-        public void Sheathe(){
-                Debug.Log("Sheathing weapons");
-                inventory.Swap();
-                handler.UpdateInventoryPositions();
-        }
-
-        public void Drop(){
-                // *** These could be consolidated into one execution ***
-                // *** These should also be moved to inventory maybe? ***
-                if(inventory.HasItemInHand()){
-                        var handobj = inventory.Hand1;
-                        var startingrot = handobj.GetComponent<Interactable>().DefaultRotation;
-                        inventory.Clear(handobj);
-                        handobj.transform.position = this.transform.position;
-                        handobj.transform.parent = null;
-                        handobj.transform.rotation = new Quaternion();
-                        handobj.transform.localRotation = Quaternion.Euler(startingrot.x, startingrot.y, startingrot.z);
-                        handobj.layer = 6;
-                } else if(inventory.HasItemEquipped() || inventory.HasEquipment()){
-                        var obj = inventory.Equip2;
-                        var startingrot = obj.GetComponent<Interactable>().DefaultRotation;
-                        inventory.Clear(obj);
-                        obj.transform.rotation = new Quaternion();
-                        obj.transform.localRotation = Quaternion.Euler(startingrot.x, startingrot.y, startingrot.z);
-                        obj.transform.position = this.transform.position;
-                        obj.transform.parent = null;
-                        obj.layer = 6;
-                }
-                
-                handler.UpdateInventoryPositions();
-        }
-
-        public void RotateCamera(float offset){
-                CurrentCamRotate = offset * CamRotateVelocity;
-        }
-
-        public void ZoomCamera(float offset){
-                CurrentCamZoom = offset * CamZoomVelocity;
-        }
-
-        public void ResetCamera(){
-                cameraControl.ResetCamera(this.gameObject.transform);
-        }
-
-        public void Exit(){
-                Application.Quit();
-        }
-
-        public void SetActionMask(ActionType actionType){
-                maskedAction = actionType;
-        }
-        
         #endregion
 
-        public void AddInteraction(ActionType action, GameObject target){
-                GUIContainer.GetComponent<GUIManager>().CloseContextMenu();
-                CurrentInteraction = new Interaction(action, target);
-                handler.SetState(action);
+        #region UI functions
+
+        ActionType GetSelectorAction(){
+                if(MaskedAction != defaultAction) return MaskedAction;
+                if(HoveredObject.GetComponent<Interactable>() == null) return ActionType.Walk;
+                return HoveredObject.GetComponent<Interactable>().AvailableActions[0];
         }
 
-        public void SetLookAt(GameObject obj){
-                LookAtTarget.transform.position = obj.transform.position;
-        }
+        #endregion
 
-        public void SetLookAt(Vector3 target){
-                LookAtTarget.transform.position = target;
-        }
+        #region Input Functions
 
-        public bool TryGrabItem(GameObject item){
-                if(inventory.HasItemInHand()){ Debug.Log(inventory.Hand1); return false;}
-                Debug.Log("Grabbing item");
-                item.GetComponent<MeshRenderer>().enabled = true;
-                handler.SetState(ActionType.Grab);
-                handler.currentInteraction = new Interaction(
-                        ActionType.Grab,
-                        item
-                );
-                guiManager.RemoveItem(item);
-                return true;
-        }
-
-        void ClearActionMask(){
-                maskedAction = ActionType.Default;
-        }
-
-        void UpdateCursorSprite(){
-                ActionType action;
-                if(maskedAction != ActionType.Default) action = maskedAction;
-                else{
-                        if(HoveredObject.GetComponent<Interactable>() == null) action = ActionType.Walk;
-                        else {
-                                action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
-                        }
-                }
-                guiManager.SetCursorSprite(action);
-        }
-
-        void UpdateCarryWeights(){
-                var weight = inventory.CurrentWeight;
-                var inhand = inventory.CarriedWeight;
-                
-                // *** A Loop here would be really clever ***
-                if(inhand <= CarryOneHand) carryState = CarryState.OneHand;
-                else if (inhand <= CarryOneHand * 2) carryState = CarryState.TwoHand;
-                else carryState = CarryState.Drag;
-        
-                if(weight <= MaxCarryWeight/2) encumberance = Encumberance.Light;
-                else if(weight <= MaxCarryWeight) encumberance = Encumberance.Medium;
-                else if (weight <= MaxCarryWeight * 1.5) encumberance = Encumberance.Heavy;
-                else encumberance = Encumberance.OverEncumber;
-        }
+        #endregion
 }

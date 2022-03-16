@@ -24,7 +24,8 @@ public class InventoryIcon : MonoBehaviour
     }
 
     public void GrabItem(){
-        _callingPlayer.GetComponent<PlayerController>().TryGrabItem(Item);
+        _callingPlayer.GetComponent<PlayerController>().MaskedAction = ActionType.Grab;
+        _callingPlayer.GetComponent<PlayerController>().HoveredObject = Item;
     }       
 
 }

@@ -16,6 +16,8 @@ public class Interaction
 
     public bool IsComplete {get; set;}
 
+    public InteractionPhase Phase {get; set;}
+
     public Interaction(ActionType type, GameObject target, float distance = 3f, float effect = 0f, float duration = 1f){
         Type = type;
         Target = target;
@@ -24,11 +26,7 @@ public class Interaction
         Progress = duration;
 
         IsComplete = false;
-    }
 
-    public Interaction(ActionType type, GameObject target, float distance){
-        Type = type;
-        Target = target;
-        Distance = distance;
+        Phase = InteractionPhase.Start;
     }
 }

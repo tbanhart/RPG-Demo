@@ -28,7 +28,9 @@ public class ButtonText : MonoBehaviour
     }
 
     void SelectAction(){
-        _callingPlayer.GetComponent<PlayerController>().AddInteraction(_action, _target);
+        _callingPlayer.GetComponent<PlayerController>().MaskedAction = _action;
+        _callingPlayer.GetComponent<PlayerController>().HoveredObject = _target;
+        //_callingPlayer.GetComponent<ActorController>().AddInteraction(new Interaction(_action, _target), true);
     }
 
 }
