@@ -34,7 +34,7 @@ public class InputHandler : MonoBehaviour
     
     // *** This is a terrible way of passing the data, needs rework like bad but idk how yet
     private void Update() {
-        controller.CursorPosition = cursorPosition.ReadValue<Vector2>();
+        controller.UpdateCursorPosition(cursorPosition.ReadValue<Vector2>());
     }   
 
     private void Awake() {

@@ -13,7 +13,7 @@ public class PlayerController : MonoBehaviour {
 
         CameraControl cameraControl;
 
-        PlayerHandler handler;
+        ConsumableHandler handler;
 
         Inventory inventory;
 
@@ -282,5 +282,9 @@ public class PlayerController : MonoBehaviour {
                 else if(weight <= MaxCarryWeight) encumberance = Encumberance.Medium;
                 else if (weight <= MaxCarryWeight * 1.5) encumberance = Encumberance.Heavy;
                 else encumberance = Encumberance.OverEncumber;
+        }
+
+        public void UpdateCursorPosition(Vector2 position){
+                CursorPosition = position;
         }
 }
