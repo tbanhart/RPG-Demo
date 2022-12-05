@@ -12,7 +12,11 @@ public class Interaction
 
     public float Effect {get; set;}
 
-    public float Progress{get; set;}
+    float _currentProgress { get; set; }
+
+    public float Progress {get; set; }
+
+    public float Duration { get; set; }
 
     public bool IsComplete {get; set;}
 
@@ -21,7 +25,8 @@ public class Interaction
         Target = target;
         Distance = distance;
         Effect = effect;
-        Progress = duration;
+        Progress = 0f;
+        Duration = duration;
 
         IsComplete = false;
     }
@@ -30,5 +35,16 @@ public class Interaction
         Type = type;
         Target = target;
         Distance = distance;
+    }
+
+    public float AddProgress(float progress)
+    {
+        _currentProgress = Mathf.Clamp(_currentProgress + progress, 0f, Duration);
+        if (_currentProgress == Duration)
+        {
+            Progress = 1f;
+            return Progress;
+        }
+        else return _currentProgress / Duration;
     }
 }

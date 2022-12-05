@@ -45,7 +45,13 @@ public class GUIManager : MonoBehaviour
     [SerializeField] GameObject EquipmentIcon;
 
     [SerializeField] Sprite DefaultIcon;
- 
+
+    #endregion
+
+    #region
+
+    [SerializeField] StatBar _progressBar;
+
     #endregion
 
     #region Window Agnostic
@@ -101,6 +107,7 @@ public class GUIManager : MonoBehaviour
         CloseContextMenu();
         CloseExamineText();
         CloseContainerInventory();
+        CloseProgressBar();
     }
 
     public void SetCursorSprite(ActionType action){
@@ -151,6 +158,27 @@ public class GUIManager : MonoBehaviour
 
     #endregion
 
+    #region Progress Bar
+
+    public void EnableProgressBar()
+    {
+        _progressBar.enabled = true;
+        _progressBar.SliderValue = 0f;
+    }
+
+    public void CloseProgressBar()
+    {
+        _progressBar.SliderValue = 0f;
+        _progressBar.enabled = false;
+    }
+
+    public void UpdateProgressBar(float value)
+    {
+        _progressBar.SliderValue = value;
+    }
+
+    #endregion
+
     #region Container Inventory
 
     public void ShowContainerInventory(GameObject target){
@@ -193,7 +221,7 @@ public class GUIManager : MonoBehaviour
 
     #endregion
 
-    #region 
+    #region Slot Icon
 
     public void SetSlotIcon(InventorySlot slot, Sprite icon){
         GameObject invicon;

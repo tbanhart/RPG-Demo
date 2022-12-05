@@ -2,8 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// Needs rework - I like the system but it doesn't really work with the direction I'm headed
+
 public class Combat : MonoBehaviour
-{
+{/*
     [SerializeField] public float Range;
     [SerializeField] public float Cooldown;
 
@@ -17,12 +19,7 @@ public class Combat : MonoBehaviour
     public AttackType attackType;
 
     private void Awake() {
-        Cooldown = 0f;
-        attackType = new AttackType(){
-            Name = "Unarmed",
-            Windup = 10f * Time.deltaTime * 2f,
-            Cooldown = 12f * Time.deltaTime * 2f
-        };
+        
     }
 
     public void StartAttack(){
@@ -49,7 +46,7 @@ public class Combat : MonoBehaviour
                 Debug.Log("Did some damage");
                 Cooldown = attackType.Cooldown;
                 SetStage(AttackStage.COOLDOWN);
-                var isdead = target.TakeDamage(WeaponDamage.Current);
+                //var isdead = target.TakeDamage(WeaponDamage._current);
                 if (isdead == true) {
                     Debug.Log("Target is dead");
                     SetStage(AttackStage.START); 
@@ -70,9 +67,9 @@ public class Combat : MonoBehaviour
     }    
 
     public bool TakeDamage(float damage){
-        Life.Current -= damage;
-        Debug.Log(this.gameObject + " is taking damage, life remaining is " + Life.Current);
-        if(Life.Current <= 0f)
+        //Life._current -= damage;
+        //Debug.Log(this.gameObject + " is taking damage, life remaining is " + Life._current);
+        /*if(Life._current <= 0f)
             return true;
         else return false;
     }    
@@ -89,4 +86,4 @@ public class Combat : MonoBehaviour
 
     public void ProgressAttack(){}
 
-}
+*/}

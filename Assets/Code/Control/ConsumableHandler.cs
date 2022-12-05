@@ -26,6 +26,8 @@ public abstract class ConsumableHandler : IStateHandler
 
     Interaction _currentInteraction = null;
 
+    public GUIManager guiManager;
+
     // Used properties
     public GameObject Owner { get; set; }
 
@@ -64,6 +66,7 @@ public abstract class ConsumableHandler : IStateHandler
         movement = owner.GetComponent<Movement>();
         inventory = owner.GetComponent<Inventory>();
         combat = owner.GetComponent<Combat>();
+        guiManager = guiContainer.GetComponent<GUIManager>();
     
         // Set properties to default values
         currentInteraction = null;
@@ -85,10 +88,10 @@ public abstract class ConsumableHandler : IStateHandler
                 HandleTravelling(); break;
 
             case State.ATTACKING:
-                HandleTravelling(); break;
+                DoInteraction(); break;
 
             case State.INTERACTING:
-                HandleInteracting(); break;
+                DoInteraction(); break;
         }
     }
 
@@ -105,48 +108,12 @@ public abstract class ConsumableHandler : IStateHandler
     }
 
     public void HandleAttack(){
-        var stage = combat.attackStage;
+        currentInteraction.Target.GetComponent<Interactable>().ApplyDamage(currentInteraction.Effect);
 
         // *** Adding this in until Combat is reintroduced ***
-        Debug.Log("Attacking target");
-        SetState(State.IDLE);
-        return;
-
-        // Stage: Starting attack
-        if(stage == AttackStage.START){
-            // Check attack range
-            if(movement.GetDistance(currentInteraction.Target.transform.position) > combat.Range){
-                movement.SetDestination(currentInteraction.Target.transform.position);
-                SetState(State.TRAVELLING);
-                movement.SetStoppingDistance(combat.Range);
-                animator.SetAttacking(false);
-                return;
-            }
-
-            // Set animator
-            animator.SetAttacking(true);
-        }
-        #region Unused stages
-        // Stage: Doing the windup
-        else if(stage == AttackStage.WINDUP){
-        }
-        // Stage: Dealing damage
-        else if(stage == AttackStage.DAMAGE){
-            // Create damage collision object
-        }
-        // Stage: Cooling down
-        else if(stage == AttackStage.COOLDOWN){
-        }
-        #endregion
-        // Stage: End
-        else if(stage == AttackStage.END){
-            animator.SetAttacking(false);
-            SetState(State.IDLE);
-            return;
-        }
-        
-        // Adding this as a replacement for doattack since most of that is handled here
-        combat.ProgressAttack();
+        //Debug.Log("Attacking target");
+        //SetState(State.IDLE);
+        //return;
     }
 
     public void HandleTravelling(){
@@ -174,12 +141,14 @@ public abstract class ConsumableHandler : IStateHandler
 
     #region State Setters
 
+    // Overload for a state
     public void SetState(State state){
         currentState = state;
+        guiManager.CloseMenus();
 
         switch(currentState){
             case State.IDLE:
-            Debug.Log("Idle");
+            case State.INVENTORY:
                 animator.SetMovement(Vector3.zero);
                 break;
 
@@ -190,15 +159,11 @@ public abstract class ConsumableHandler : IStateHandler
 
             case State.ATTACKING:
                 animator.SetMovement(Vector3.zero);
-                combat.StartAttack();
-                break;
-
-            case State.INVENTORY:
-                animator.SetMovement(Vector3.zero);
                 break;
         }
     }
 
+    // Overload for an actiontype
     public void SetState(ActionType action)
     {
         switch (action)
@@ -276,6 +241,28 @@ public abstract class ConsumableHandler : IStateHandler
                 guiContainer.GetComponent<GUIManager>().ShowContainerInventory(currentInteraction.Target);
                 SetState(State.INVENTORY);
                 CompleteInteraction();
+                break;
+
+            case ActionType.Attack:
+                var progress = currentInteraction.AddProgress(Time.deltaTime);
+                if(progress == 1f)
+                {
+                    HandleAttack();
+                    animator.SetAttacking(true);
+                    if(currentInteraction.Target.GetComponent<Interactable>().CurrentLife == 0f)
+                    {
+                        Debug.Log(currentInteraction.Target + " is dead");
+                        guiManager.CloseProgressBar();
+                        CompleteInteraction();
+                        break;
+                    }
+                    else
+                    {
+                        currentInteraction.Progress = 0f;
+                    }
+                }
+                guiManager.UpdateProgressBar(progress);
+
                 break;
 
             default:

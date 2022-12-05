@@ -27,10 +27,11 @@ public class ActorAnimator : MonoBehaviour
     }
 
     public void SetAttacking(bool isAttacking){
-        SetMovement(Vector3.zero);
+        //SetMovement(Vector3.zero);
 
         //animator.SetBool("IsMoving", false);
-        animator.SetBool("IsAttacking", isAttacking);
+        //animator.SetBool("IsAttacking", isAttacking);
+        animator.SetTrigger("TriggerAttack");
     }
 
     public void ClearFlags(){

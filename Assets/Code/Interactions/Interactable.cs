@@ -17,9 +17,18 @@ public class Interactable : MonoBehaviour
     [HideInInspector] public Vector3 EquipOffsetRot;
     #endregion
     [SerializeField] public float Weight;
+    [SerializeField] public float DamageMultiplier;
+    public float AttackDamage;
     [SerializeField] public float Size;
     [SerializeField] public string ExamineText;
     [SerializeField] public Sprite Image;
+
+    [SerializeField] public float MaxLife;
+    [SerializeField] public float CurrentLife;
+    RPGStat Life;
+
+    InteractableState _state = InteractableState.Idle;
+    [SerializeField] ObjectType _objectType;
 
     [SerializeField] public bool IsContainer;
 
@@ -28,16 +37,39 @@ public class Interactable : MonoBehaviour
     private void Awake() {
         if(ExamineText == null) ExamineText = string.Empty;
         if(IsContainer == true) container = GetComponent<Container>();
+        AttackDamage = Weight * DamageMultiplier;
+        Life = new RPGStat(MaxLife);
+        Life.SetMax();
     }
-
+        
     private void Update() {
+        switch (_state)
+        {
+            case InteractableState.Idle:
+                break;
+            case InteractableState.Destroyed:
+                Destroy(this.gameObject);
+                break;
+        }
         if(IsContainer) Weight = container.CurrentWeight;
     }
 
     public Interaction GetInteraction(ActionType action){
         return new Interaction(action, this.gameObject);
     }
+
+    public float ApplyDamage(float damage)
+    {
+        Life.Add(-damage);
+        CurrentLife = Life.GetPercent();
+        if (CurrentLife == 0f) _state = InteractableState.Destroyed;
+        return CurrentLife;
+    }
 }
+
+enum ObjectType { Item, Equipment, Creature, Furniture }
+
+enum InteractableState { Idle, Destroyed }
 
 #if UNITY_EDITOR
 [CustomEditor(typeof(Interactable))]

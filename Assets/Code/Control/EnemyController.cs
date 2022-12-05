@@ -51,7 +51,8 @@ public class EnemyController : MonoBehaviour
                 break;
 
             case State.TRAVELLING:
-                if(movement.GetDistance(detection.Aggro) <= combat.Range){
+                // Needs attack range
+                if(movement.GetDistance(detection.Aggro) <= 1f){
                     animator.SetMovement(Vector3.zero);
                     SetState(State.ATTACKING);
                 } else{
@@ -73,7 +74,10 @@ public class EnemyController : MonoBehaviour
                 break;
             
             case State.ATTACKING:
+                Debug.Log("Attacking");
+                // Needs rework - uses old system
                 // Deal damage and return if the target is dead
+                /*
                 var isDead = combat.DoAttack(CurrentInteraction.Target.GetComponent<Combat>());
                 animator.SetAttacking(true);
                 if (isDead == true)
@@ -83,6 +87,8 @@ public class EnemyController : MonoBehaviour
                     SetState(State.IDLE);
                     animator.SetAttacking(false);
                 }
+                break;
+                */
                 break;
         }
     }

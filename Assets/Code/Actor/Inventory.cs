@@ -23,7 +23,9 @@ public class Inventory : MonoBehaviour
     [SerializeField] public GameObject WaistLocation;
 
     // Public accessors for inventory slot parent locations
-    public GameObject Hand1 {get => _hand1.GetItem();}
+    public GameObject Hand1 {get {
+            if (_hand1 == null) return null; else return _hand1.GetItem();
+        } }
     public GameObject Equip1 {get => _equip1.GetItem();}
     public GameObject Equip2 {get => _equip2.GetItem();}
     public GameObject Waist {get => _waist.GetItem();}
