@@ -37,7 +37,7 @@ public class Interactable : MonoBehaviour
     private void Awake() {
         if(ExamineText == null) ExamineText = string.Empty;
         if(IsContainer == true) container = GetComponent<Container>();
-        AttackDamage = Weight * DamageMultiplier;
+        AttackDamage = Weight * (1f + DamageMultiplier);
         Life = new RPGStat(MaxLife);
         Life.SetMax();
     }
@@ -62,6 +62,7 @@ public class Interactable : MonoBehaviour
     {
         Life.Add(-damage);
         CurrentLife = Life.GetPercent();
+        Debug.Log("Took " + damage + " damage. Life: " + CurrentLife);
         if (CurrentLife == 0f) _state = InteractableState.Destroyed;
         return CurrentLife;
     }

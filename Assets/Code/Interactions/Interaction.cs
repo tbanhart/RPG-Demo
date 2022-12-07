@@ -47,4 +47,10 @@ public class Interaction
         }
         else return _currentProgress / Duration;
     }
+
+    public float ResetProgress()
+    {
+        _currentProgress = 0f;
+        return _currentProgress;
+    }
 }

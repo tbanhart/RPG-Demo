@@ -78,7 +78,8 @@ public class Movement : MonoBehaviour
 
         float rightVelocity = rightVector.magnitude * Vector3.Dot(rightVector, transform.right);
 
-        return new Vector3(rightVelocity * MoveSpeed, 0, forwardVelocity * MoveSpeed);
+        //return new Vector3(rightVelocity * MoveSpeed, 0, forwardVelocity * MoveSpeed);
+        return new Vector3(rightVelocity / .1f, 0, forwardVelocity / MoveSpeed);
     }
 
     internal void SetStoppingDistance(float distance)

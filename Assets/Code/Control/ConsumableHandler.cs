@@ -16,12 +16,12 @@ public abstract class ConsumableHandler : IStateHandler
 
     public Combat combat { get; set; }
 
-    public Interaction currentInteraction { 
+    public Interaction currentInteraction {
         get {
             if (_currentInteraction == null) return null;
             else return _currentInteraction;
-        } 
-        set => _currentInteraction = value; 
+        }
+        set => _currentInteraction = value;
     }
 
     Interaction _currentInteraction = null;
@@ -43,9 +43,9 @@ public abstract class ConsumableHandler : IStateHandler
 
     public GameObject guiContainer { get; set; }
 
-    public CarryState carryState {get; set;}
+    public CarryState carryState { get; set; }
 
-    public Encumberance encumberance {get; set;}
+    public Encumberance encumberance { get; set; }
 
     public float CarryOneHand;
 
@@ -53,7 +53,7 @@ public abstract class ConsumableHandler : IStateHandler
 
     #endregion
 
-    public ConsumableHandler(GameObject owner, Camera cam, GameObject gui){
+    public ConsumableHandler(GameObject owner, Camera cam, GameObject gui) {
 
 
         // Set entered objects from owner
@@ -67,7 +67,7 @@ public abstract class ConsumableHandler : IStateHandler
         inventory = owner.GetComponent<Inventory>();
         combat = owner.GetComponent<Combat>();
         guiManager = guiContainer.GetComponent<GUIManager>();
-    
+
         // Set properties to default values
         currentInteraction = null;
         currentState = State.IDLE;
@@ -76,14 +76,14 @@ public abstract class ConsumableHandler : IStateHandler
 
     #region Inherited standard state handlers
 
-    public void HandleState(){
-        switch(currentState){
+    public void HandleState() {
+        switch (currentState) {
             case State.IDLE:
                 HandleIdle(); break;
-            
+
             case State.MOVING:
                 HandleMove(); break;
-            
+
             case State.TRAVELLING:
                 HandleTravelling(); break;
 
@@ -95,19 +95,19 @@ public abstract class ConsumableHandler : IStateHandler
         }
     }
 
-    public void HandleIdle(){
-        if (currentInteraction != null){
+    public void HandleIdle() {
+        if (currentInteraction != null) {
             SetState(State.TRAVELLING);
-        }   
+        }
     }
 
-    public void HandleMove(){
-        if(movement.IsMoving == false) {SetState(State.IDLE); return;}
+    public void HandleMove() {
+        if (movement.IsMoving == false) { SetState(State.IDLE); return; }
 
         animator.SetMovement(movement.GetVelocity());
     }
 
-    public void HandleAttack(){
+    public void HandleAttack() {
         currentInteraction.Target.GetComponent<Interactable>().ApplyDamage(currentInteraction.Effect);
 
         // *** Adding this in until Combat is reintroduced ***
@@ -116,7 +116,7 @@ public abstract class ConsumableHandler : IStateHandler
         //return;
     }
 
-    public void HandleTravelling(){
+    public void HandleTravelling() {
         // If the move is complete or canceled, do the interaction
         if (movement.IsMoving == false)
         {
@@ -129,12 +129,12 @@ public abstract class ConsumableHandler : IStateHandler
         }
     }
 
-    public void HandleInteracting(){
+    public void HandleInteracting() {
         DoInteraction();
     }
 
-    public void HandleInventory(){
-        
+    public void HandleInventory() {
+
     }
 
     #endregion
@@ -142,11 +142,11 @@ public abstract class ConsumableHandler : IStateHandler
     #region State Setters
 
     // Overload for a state
-    public void SetState(State state){
+    public void SetState(State state) {
         currentState = state;
         guiManager.CloseMenus();
 
-        switch(currentState){
+        switch (currentState) {
             case State.IDLE:
             case State.INVENTORY:
                 animator.SetMovement(Vector3.zero);
@@ -187,7 +187,7 @@ public abstract class ConsumableHandler : IStateHandler
 
     #region Accessor functions - no need to override
 
-    public void UpdateSelector(Vector3 position){
+    public void UpdateSelector(Vector3 position) {
         selectorPosition = position;
     }
 
@@ -210,7 +210,7 @@ public abstract class ConsumableHandler : IStateHandler
                 break;
 
             case ActionType.Examine:
-            // ***Later interactions will take a duration to complete, for now it just handles them like they're all instantaneous ***
+                // ***Later interactions will take a duration to complete, for now it just handles them like they're all instantaneous ***
                 var text = currentInteraction.Target.GetComponent<Interactable>().ExamineText;
                 if (text != string.Empty)
                 {
@@ -221,13 +221,13 @@ public abstract class ConsumableHandler : IStateHandler
                 break;
 
             case ActionType.Store:
-                if(!inventory.HasItemInHand()) break;
+                if (!inventory.HasItemInHand()) break;
                 var item = inventory.Hand1;
                 bool itemstored;
-                itemstored = 
+                itemstored =
                     currentInteraction.Target.GetComponent<Container>().
                         StoreItem(item);
-                if(itemstored == true){
+                if (itemstored == true) {
                     item.transform.SetParent(currentInteraction.Target.transform);
                     item.layer = 2;
                     item.GetComponent<MeshRenderer>().enabled = false;
@@ -245,11 +245,12 @@ public abstract class ConsumableHandler : IStateHandler
 
             case ActionType.Attack:
                 var progress = currentInteraction.AddProgress(Time.deltaTime);
-                if(progress == 1f)
+                if (progress == 1f)
                 {
                     HandleAttack();
+                    Debug.Log("Dealt " + currentInteraction.Effect + " damage.");
                     animator.SetAttacking(true);
-                    if(currentInteraction.Target.GetComponent<Interactable>().CurrentLife == 0f)
+                    if (currentInteraction.Target.GetComponent<Interactable>().CurrentLife == 0f)
                     {
                         Debug.Log(currentInteraction.Target + " is dead");
                         guiManager.CloseProgressBar();
@@ -258,7 +259,8 @@ public abstract class ConsumableHandler : IStateHandler
                     }
                     else
                     {
-                        currentInteraction.Progress = 0f;
+                        Debug.Log("Did attack, resetting progress");
+                        progress = currentInteraction.ResetProgress();
                     }
                 }
                 guiManager.UpdateProgressBar(progress);
@@ -303,7 +305,7 @@ public abstract class ConsumableHandler : IStateHandler
             guiman.SetSlotIcon(InventorySlot.EQUIP1, invinter.Image);
 
         }
-        if (inventory.HasEquipment() == true){
+        if (inventory.HasEquipment() == true) {
             var invequip = inventory.Equip2;
             var invinter = invequip.GetComponent<Interactable>();
             var rot = invinter.EquipOffsetRot;
@@ -317,7 +319,7 @@ public abstract class ConsumableHandler : IStateHandler
         UpdateCarryWeights();
     }
 
-    public void UpdateCarryWeights(){
+    public void UpdateCarryWeights() {
         var weight = inventory.CurrentWeight;
         var inhand = inventory.CarriedWeight;
 
@@ -331,7 +333,7 @@ public abstract class ConsumableHandler : IStateHandler
         else if (weight <= MaxCarryWeight * 1.5) encumberance = Encumberance.Heavy;
         else encumberance = Encumberance.OverEncumber;
 
-        switch(carryState){
+        switch (carryState) {
             case CarryState.OneHand:
                 movement.SetSpeedMultiplier(1);
                 break;
@@ -344,7 +346,7 @@ public abstract class ConsumableHandler : IStateHandler
                 Debug.Log(carryState);
                 movement.SetSpeedMultiplier(.5f);
                 break;
-            
+
             default:
                 movement.SetSpeedMultiplier(1);
                 break;
@@ -352,8 +354,16 @@ public abstract class ConsumableHandler : IStateHandler
         animator.SetCarryWeight((int)carryState);
     }
 
-    public void CompleteInteraction(){
+    public void CompleteInteraction() {
         currentInteraction = null;
         SetState(State.IDLE);
+    }
+
+    public Interaction CreateAttack(GameObject target)
+    {
+        if (inventory.Hand1 == null) return new Interaction(ActionType.Attack, target, 3f, 1f, 2f);
+
+        var item = inventory.Hand1.GetComponent<Interactable>();
+        return new Interaction(ActionType.Attack, target, 3f, item.AttackDamage, Mathf.Max(1f, item.Weight));
     }
 }

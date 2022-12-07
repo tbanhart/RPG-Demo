@@ -150,10 +150,7 @@ public class PlayerController : MonoBehaviour {
             switch (action)
             {
                 case ActionType.Attack:
-                    float damage;
-                    if (inventory.Hand1 == null) damage = 1f;
-                    else damage = inventory.Hand1.GetComponent<Interactable>().AttackDamage;
-                        CurrentInteraction = new Interaction(action, HoveredObject, 3f, damage, 3f);
+                    CurrentInteraction = handler.CreateAttack(HoveredObject);
                     break;
                     
                 default:
