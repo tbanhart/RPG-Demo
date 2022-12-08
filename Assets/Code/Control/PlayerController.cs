@@ -52,6 +52,8 @@ public class PlayerController : MonoBehaviour {
 
     CarryState carryState {get => handler.carryState; set => handler.carryState = value;}
 
+    [SerializeField] GameObject MoveTarget;
+
     // These all need to be moved to inventory
     [SerializeField] float CarryOneHand;
 
@@ -97,6 +99,7 @@ public class PlayerController : MonoBehaviour {
         if(Physics.Raycast(ray, out hit, Mathf.Infinity, (1 << 6 | 1 << 9))){
             // Probably want to put something about layer masks in here
             if(hit.collider == null){
+                    SelectorPosition = hit.point;
             }
             else {
                     SelectorPosition = hit.point;
@@ -138,6 +141,7 @@ public class PlayerController : MonoBehaviour {
                     break;
 
                 case GUIFlag.UpdateProgress:
+                    Debug.Log(handler.currentInteraction.Progress);
                     guiManager.UpdateProgressBar(handler.currentInteraction.Progress);
                     break;
 
@@ -192,23 +196,15 @@ public class PlayerController : MonoBehaviour {
                 action = HoveredObject.GetComponent<Interactable>().AvailableActions[0];
             }
 
-            switch (action)
-            {
-                case ActionType.Attack:
-                    CurrentInteraction = handler.CreateAttack(HoveredObject);
-                    break;
-                    
-                default:
-                    CurrentInteraction = new Interaction(action, HoveredObject, 3f);
-                    break;
-            }
+            handler.UpdateInteraction(action, HoveredObject, 1f);
         }
         // Other wise move to the selected point
         else
         {
+            MoveTarget.transform.position = SelectorPosition;
+
             // Start moving to the selected point
-            handler.SetState(State.MOVING);
-            CurrentInteraction = null;
+            handler.UpdateInteraction(ActionType.Walk, MoveTarget, .5f);
         }
 
         ClearActionMask();

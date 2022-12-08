@@ -47,6 +47,8 @@ public abstract class ConsumableHandler
 
     public List<GUIFlag> GUIFlags = new List<GUIFlag>();
 
+    public GameObject CachedObject;
+
     #endregion
 
     public ConsumableHandler(GameObject owner, Camera cam, GameObject gui) {
@@ -68,21 +70,27 @@ public abstract class ConsumableHandler
     #region Inherited standard state handlers
 
     public void HandleState() {
-        switch (currentState) {
-            case State.IDLE:
-                HandleIdle(); break;
+        if (currentInteraction != null && movement.GetDistance(currentInteraction.Target) > currentInteraction.Distance)
+        {
+            movement.SetDestination(currentInteraction.Target);
+            animator.SetMovement(movement.GetVelocity());
+        }
+        else
+        {
+            switch (currentState)
+            {
+                case State.IDLE:
+                    HandleIdle(); break;
 
-            case State.MOVING:
-                HandleMove(); break;
+                case State.MOVING:
+                    SetState(State.IDLE);
+                    break;
 
-            case State.TRAVELLING:
-                HandleTravelling(); break;
-
-            case State.ATTACKING:
-                DoInteraction(); break;
-
-            case State.INTERACTING:
-                DoInteraction(); break;
+                case State.TRAVELLING:
+                case State.ATTACKING:
+                case State.INTERACTING:
+                    DoInteraction(); break;
+            }
         }
     }
 
@@ -144,7 +152,7 @@ public abstract class ConsumableHandler
 
             case State.MOVING:
             case State.TRAVELLING:
-                movement.SetDestination(selectorPosition);
+                movement.SetDestination(currentInteraction.Target);
                 break;
 
             case State.ATTACKING:
@@ -207,6 +215,7 @@ public abstract class ConsumableHandler
                     var point = currentInteraction.Target.transform.position;
                     GUIFlags.Add(GUIFlag.ShowExamineText);
                 }
+                CompleteInteraction();
                 break;
 
             case ActionType.Store:
@@ -229,6 +238,7 @@ public abstract class ConsumableHandler
             case ActionType.Open:
                 GUIFlags.Add(GUIFlag.ShowContainerInventory);
                 SetState(State.INVENTORY);
+                CompleteInteraction();
                 break;
 
             case ActionType.Attack:
@@ -249,16 +259,41 @@ public abstract class ConsumableHandler
                     else
                     {
                         Debug.Log("Did attack, resetting progress");
-                        progress = currentInteraction.ResetProgress();
+                        currentInteraction.ResetProgress();
                     }
                 }
-
+                Debug.Log(currentInteraction.Progress);
                 break;
 
             default:
                 Debug.Log("Unhandled interaction actiontype " + currentInteraction.Type);
+                CompleteInteraction();
                 break;
         }
+    }
+    
+    public void CompleteInteraction() {
+        CachedObject = currentInteraction.Target;
+        currentInteraction = null;
+        SetState(State.IDLE);
+    }
+    
+    public void UpdateInteraction(ActionType action, GameObject target, float distance)
+    {
+        if(action == ActionType.Attack)
+        {
+            currentInteraction = CreateAttack(target);
+            return;
+        }
+        currentInteraction = new Interaction(action, target, distance);
+        SetState(State.INTERACTING);
+    }
+    public Interaction CreateAttack(GameObject target)
+    {
+        if (inventory.Hand1 == null) return new Interaction(ActionType.Attack, target, 3f, 1f, 2f);
+
+        var item = inventory.Hand1.GetComponent<Interactable>();
+        return new Interaction(ActionType.Attack, target, 3f, item.AttackDamage, Mathf.Max(1f, item.Weight));
     }
 
     // *** This needs to be moved to the inventory component ***
@@ -335,18 +370,5 @@ public abstract class ConsumableHandler
                 break;
         }
         animator.SetCarryWeight((int)carryState);
-    }
-
-    public void CompleteInteraction() {
-        currentInteraction = null;
-        SetState(State.IDLE);
-    }
-
-    public Interaction CreateAttack(GameObject target)
-    {
-        if (inventory.Hand1 == null) return new Interaction(ActionType.Attack, target, 3f, 1f, 2f);
-
-        var item = inventory.Hand1.GetComponent<Interactable>();
-        return new Interaction(ActionType.Attack, target, 3f, item.AttackDamage, Mathf.Max(1f, item.Weight));
     }
 }

@@ -14,7 +14,7 @@ public class Interaction
 
     float _currentProgress { get; set; }
 
-    public float Progress {get; set; }
+    public float Progress { get => _currentProgress / Duration; }
 
     public float Duration { get; set; }
 
@@ -25,7 +25,7 @@ public class Interaction
         Target = target;
         Distance = distance;
         Effect = effect;
-        Progress = 0f;
+        _currentProgress = 0f;
         Duration = duration;
 
         IsComplete = false;
@@ -42,8 +42,7 @@ public class Interaction
         _currentProgress = Mathf.Clamp(_currentProgress + progress, 0f, Duration);
         if (_currentProgress == Duration)
         {
-            Progress = 1f;
-            return Progress;
+            return 1f;
         }
         else return _currentProgress / Duration;
     }

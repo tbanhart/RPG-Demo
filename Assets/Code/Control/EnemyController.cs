@@ -52,7 +52,7 @@ public class EnemyController : MonoBehaviour
                 if(movement.GetDistance(_target.transform.position) < detection.Radius)
                 {
                     _handler.SetState(State.TRAVELLING);
-                    _handler.currentInteraction = new Interaction(ActionType.Walk, _target, 3f);
+                    _handler.currentInteraction = new Interaction(ActionType.Walk, _target, 1f);
                 }
                 break;
 
