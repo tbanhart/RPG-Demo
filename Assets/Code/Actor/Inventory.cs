@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CarryState { Default = 0, OneHand = 1, TwoHand = 2, Drag = 3 }
+
+public enum Encumberance { Light, Medium, Heavy, OverEncumber }
+
 public class Inventory : MonoBehaviour
 {
     //public GameObject Hand1 {get => Items[(int)InventorySlot.HAND1].GetItem();}
@@ -26,8 +30,18 @@ public class Inventory : MonoBehaviour
     public GameObject Hand1 {get {
             if (_hand1 == null) return null; else return _hand1.GetItem();
         } }
-    public GameObject Equip1 {get => _equip1.GetItem();}
-    public GameObject Equip2 {get => _equip2.GetItem();}
+    public GameObject Equip1
+    {
+        get
+        {
+            if (_equip1 == null) return null; else return _equip1.GetItem();
+        }
+    }
+    public GameObject Equip2
+    { get {
+            if (_equip2 == null) return null; else return _equip2.GetItem();
+        } }
+
     public GameObject Waist {get => _waist.GetItem();}
  
     InventoryItem _hand1 {get => GetSlotItem(InventorySlot.HAND1); 

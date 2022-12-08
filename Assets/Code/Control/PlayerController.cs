@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -21,7 +22,7 @@ public class PlayerController : MonoBehaviour {
 
     #region Properties
 
-    [SerializeField] public State CurrentState {get => handler.currentState; set => handler.SetState(value);}
+    State _currentState { get => handler.currentState; }
 
     // This is the cursor's current position on the screen, will mostly move in k+m only!
     [SerializeField] public Vector2 CursorPosition;
@@ -51,6 +52,7 @@ public class PlayerController : MonoBehaviour {
 
     CarryState carryState {get => handler.carryState; set => handler.carryState = value;}
 
+    // These all need to be moved to inventory
     [SerializeField] float CarryOneHand;
 
     [SerializeField] float MaxCarryWeight;
@@ -68,7 +70,6 @@ public class PlayerController : MonoBehaviour {
     private void Awake() {
         handler = new PlayerHandler(this.gameObject, currentcam, GUIContainer);
 
-        CurrentState = State.IDLE;
         inventory = GetComponent<Inventory>(); 
         cameraControl = GetComponent<CameraControl>();
         CurrentInteraction = null;
@@ -114,10 +115,54 @@ public class PlayerController : MonoBehaviour {
 
         UpdateCursorSprite();
 
-
-        debugState = CurrentState;
+        debugState = _currentState;
         debugEncumberance = encumberance;
         debugCarryState = carryState;
+    }
+
+    private void LateUpdate()
+    {
+        // Update UI elements
+        foreach(var flag in handler.GUIFlags)
+        {
+            if(flag == GUIFlag.CloseAll)
+            {
+                guiManager.CloseMenus();
+                break;
+            }
+            switch (flag)
+            {
+                case GUIFlag.KilledTarget:
+                case GUIFlag.InteractionComplete:
+                    guiManager.CloseProgressBar();
+                    break;
+
+                case GUIFlag.UpdateProgress:
+                    guiManager.UpdateProgressBar(handler.currentInteraction.Progress);
+                    break;
+
+                case GUIFlag.ShowExamineText:
+                    var target = handler.currentInteraction.Target;
+                    guiManager.ShowExamineText(currentcam.WorldToScreenPoint(target.transform.position), target.GetComponent<Interactable>().ExamineText);
+                    break;
+
+                case GUIFlag.ShowContainerInventory:
+                    guiManager.ShowContainerInventory(handler.currentInteraction.Target);
+                    break;
+
+                case GUIFlag.UpdateInventory:
+                    guiManager.ClearPlayerInventory();
+                    if (inventory.Hand1) guiManager.SetSlotIcon(
+                        InventorySlot.HAND1, inventory.Hand1.GetComponent<Interactable>().Image);
+                    if (inventory.Equip1) guiManager.SetSlotIcon(
+                        InventorySlot.EQUIP1, inventory.Equip1.GetComponent<Interactable>().Image);
+                    if (inventory.Equip2) guiManager.SetSlotIcon(
+                        InventorySlot.EQUIP2, inventory.Equip2.GetComponent<Interactable>().Image);
+                    break;
+            }
+        }
+
+        handler.GUIFlags.Clear();
     }
 
     #endregion

@@ -10,6 +10,8 @@ public class Detection : MonoBehaviour
 
     [SerializeField] Collider detcollider;
 
+    [SerializeField] public float Radius;
+
     private void Awake() {
         Targets = new List<GameObject>();
         Aggro = null;

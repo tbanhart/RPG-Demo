@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Container for the state machine logic of a generic actor
-public abstract class ConsumableHandler : IStateHandler
+public abstract class ConsumableHandler
 {
     #region Properties
 
@@ -26,8 +26,6 @@ public abstract class ConsumableHandler : IStateHandler
 
     Interaction _currentInteraction = null;
 
-    public GUIManager guiManager;
-
     // Used properties
     public GameObject Owner { get; set; }
 
@@ -39,10 +37,6 @@ public abstract class ConsumableHandler : IStateHandler
 
     public GameObject sheathePosition { get => inventory.EquipLocation; }
 
-    public Camera maincam { get; set; }
-
-    public GameObject guiContainer { get; set; }
-
     public CarryState carryState { get; set; }
 
     public Encumberance encumberance { get; set; }
@@ -51,22 +45,19 @@ public abstract class ConsumableHandler : IStateHandler
 
     public float MaxCarryWeight;
 
+    public List<GUIFlag> GUIFlags = new List<GUIFlag>();
+
     #endregion
 
     public ConsumableHandler(GameObject owner, Camera cam, GameObject gui) {
-
-
         // Set entered objects from owner
         Owner = owner;
-        maincam = cam;
-        guiContainer = gui;
 
         // Set components from owner
         animator = owner.GetComponent<ActorAnimator>();
         movement = owner.GetComponent<Movement>();
         inventory = owner.GetComponent<Inventory>();
         combat = owner.GetComponent<Combat>();
-        guiManager = guiContainer.GetComponent<GUIManager>();
 
         // Set properties to default values
         currentInteraction = null;
@@ -144,7 +135,6 @@ public abstract class ConsumableHandler : IStateHandler
     // Overload for a state
     public void SetState(State state) {
         currentState = state;
-        guiManager.CloseMenus();
 
         switch (currentState) {
             case State.IDLE:
@@ -215,9 +205,8 @@ public abstract class ConsumableHandler : IStateHandler
                 if (text != string.Empty)
                 {
                     var point = currentInteraction.Target.transform.position;
-                    guiContainer.GetComponent<GUIManager>().ShowExamineText(maincam.WorldToScreenPoint(point), text);
+                    GUIFlags.Add(GUIFlag.ShowExamineText);
                 }
-                CompleteInteraction();
                 break;
 
             case ActionType.Store:
@@ -238,13 +227,13 @@ public abstract class ConsumableHandler : IStateHandler
                 break;
 
             case ActionType.Open:
-                guiContainer.GetComponent<GUIManager>().ShowContainerInventory(currentInteraction.Target);
+                GUIFlags.Add(GUIFlag.ShowContainerInventory);
                 SetState(State.INVENTORY);
-                CompleteInteraction();
                 break;
 
             case ActionType.Attack:
                 var progress = currentInteraction.AddProgress(Time.deltaTime);
+                GUIFlags.Add(GUIFlag.UpdateProgress);
                 if (progress == 1f)
                 {
                     HandleAttack();
@@ -253,7 +242,7 @@ public abstract class ConsumableHandler : IStateHandler
                     if (currentInteraction.Target.GetComponent<Interactable>().CurrentLife == 0f)
                     {
                         Debug.Log(currentInteraction.Target + " is dead");
-                        guiManager.CloseProgressBar();
+                        GUIFlags.Add(GUIFlag.KilledTarget);
                         CompleteInteraction();
                         break;
                     }
@@ -263,7 +252,6 @@ public abstract class ConsumableHandler : IStateHandler
                         progress = currentInteraction.ResetProgress();
                     }
                 }
-                guiManager.UpdateProgressBar(progress);
 
                 break;
 
@@ -276,11 +264,6 @@ public abstract class ConsumableHandler : IStateHandler
     // *** This needs to be moved to the inventory component ***
     public void UpdateInventoryPositions()
     {
-        var guiman = guiContainer.GetComponent<GUIManager>();
-
-        // Clear the UI slots before updating them
-        guiman.ClearPlayerInventory();
-
         // *** There should be a method that can be looped thru for this ***
         if (inventory.HasItemInHand() == true)
         {
@@ -291,7 +274,7 @@ public abstract class ConsumableHandler : IStateHandler
             invhand.transform.localPosition = invinter.HandOffsetPos;
             invhand.transform.localRotation = new Quaternion();
             invhand.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
-            guiman.SetSlotIcon(InventorySlot.HAND1, invinter.Image);
+            //guiman.SetSlotIcon(InventorySlot.HAND1, invinter.Image);
         }
         if (inventory.HasItemEquipped() == true)
         {
@@ -302,7 +285,7 @@ public abstract class ConsumableHandler : IStateHandler
             invequip.transform.localPosition = invinter.EquipOffsetPos;
             invequip.transform.localRotation = new Quaternion();
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
-            guiman.SetSlotIcon(InventorySlot.EQUIP1, invinter.Image);
+            //guiman.SetSlotIcon(InventorySlot.EQUIP1, invinter.Image);
 
         }
         if (inventory.HasEquipment() == true) {
@@ -313,9 +296,9 @@ public abstract class ConsumableHandler : IStateHandler
             invequip.transform.localPosition = invinter.EquipOffsetPos;
             invequip.transform.localRotation = new Quaternion();
             invequip.transform.localRotation = Quaternion.Euler(rot.x, rot.y, rot.z);
-            guiman.SetSlotIcon(InventorySlot.EQUIP2, invinter.Image);
+            //guiman.SetSlotIcon(InventorySlot.EQUIP2, invinter.Image);
         }
-
+        GUIFlags.Add(GUIFlag.UpdateInventory);
         UpdateCarryWeights();
     }
 

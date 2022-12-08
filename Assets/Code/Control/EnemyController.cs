@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class EnemyController : MonoBehaviour
 {
@@ -8,11 +9,15 @@ public class EnemyController : MonoBehaviour
 
     Combat combat;
 
+    ConsumableHandler _handler;
+
     Inventory inventory;
 
     ActorAnimator animator;
 
     Interaction CurrentInteraction;
+
+    GameObject _target;
 
     [SerializeField] State CurrentState;
 
@@ -25,6 +30,8 @@ public class EnemyController : MonoBehaviour
     [SerializeField] float MaxChase;
 
     private void Awake() {
+        _handler = new EnemyHandler(this.gameObject, null, null);
+
         movement = GetComponent<Movement>();
         combat = GetComponent<Combat>();
         inventory = GetComponent<Inventory>();
@@ -34,35 +41,23 @@ public class EnemyController : MonoBehaviour
         SetState(State.IDLE);
         MaxChase /= Time.deltaTime;
         Origin = this.transform.position;
+        _target = GameObject.FindGameObjectWithTag("Player");
+
+        CurrentState = State.IDLE;
     }
 
     private void Update() {
         switch(CurrentState){
             case State.IDLE:
-                if(detection.HasAggro() == true){
-                    CurrentInteraction = new Interaction(
-                        ActionType.Attack,
-                        detection.Aggro
-                    );
-                    SetState(State.TRAVELLING);
-                    ChaseTimer = 0f;
-                    movement.SetDestination(detection.Aggro);
+                if(movement.GetDistance(_target.transform.position) < detection.Radius)
+                {
+                    _handler.SetState(State.TRAVELLING);
+                    _handler.currentInteraction = new Interaction(ActionType.Walk, _target, 3f);
                 }
                 break;
 
             case State.TRAVELLING:
-                // Needs attack range
-                if(movement.GetDistance(detection.Aggro) <= 1f){
-                    animator.SetMovement(Vector3.zero);
-                    SetState(State.ATTACKING);
-                } else{
-                    ChaseTimer += 1f;
-                    if (ChaseTimer >= MaxChase){
-                        SetState(State.MOVING);
-                        movement.SetDestination(Origin);
-                    }
-                    animator.SetMovement(movement.GetVelocity());
-                }
+                
                 break;
 
             case State.MOVING:
